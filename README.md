@@ -1,19 +1,20 @@
 # Cash Guardian
 
-## Description
+## *Description*
 
-Cash Guardia is a user-friendly visual budgeting tool. It allows the user to input  expenses and provides a breakdown of cashflow using detailed charts and graphs. With visual insight into income and expenses, Cash Guardian effectively helps users control their spending habits and maintain their budget goals. CG provides a solution whether the user is saving for something big, or just looking to optimize overall financial health
+Cash Guardian is a user-friendly, visual budgeting tool. After inputting expenses, CG provides a breakdown of cashflow with detailed charts and graphs. With visual insight into income and expenses, Cash Guardian effectively helps users control their spending habits and maintain their budget goals. CG provides a solution whether the user is saving for something big, or just looking to optimize overall financial health
+
 ![CG screenshot](https://github.com/user-attachments/assets/e2863341-6d6a-4470-a91a-40a660a05b9b)
 
 Deployed Site: https://iamthesaint.github.io/cash-guardian/
 
-## Usage
+## *Usage*
 
 Upon first visit to the site, user will be asked to provide baseline financial information and categorical spending.
 
-When monetary information is submitted, the graphs and charts on the right side will dynamically update with the current data. Each time income and expense information is added, CG will aggregate the data and provide a comprehensive outline of spending habits.
+When monetary information is submitted, the graphs and charts on the right side will dynamically update with the current data. Each time income and expense information is added, CG will aggregate the data and provide a comprehensive outline of spending habits to aid in money-saving.
 
-## Credits
+## *Credits*
 
 Stephenie St.Hilaire - https://github.com/iamthesaint
 
@@ -21,11 +22,11 @@ David Janata - https://github.com/DavidDJanata
 
 Zander Kubajak - https://github.com/ZVKubajak
 
-Assets Used:
+*Assets Used:*
 
-- Bootstrap CSS: https://getbootstrap.com
+- Bootstrap CSS Framework: https://getbootstrap.com
 
-## License
+## *License*
 
 MIT License
 
