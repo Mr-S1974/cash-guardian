@@ -7,7 +7,7 @@ function formatFeedbackDate(isoDate) {
   }).format(new Date(isoDate));
 }
 
-export function FeedbackBoard({ feedbacks, onAddFeedback, onRemoveFeedback }) {
+export function FeedbackBoard({ feedbacks, onAddFeedback, onRemoveFeedback, active = false }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -30,13 +30,20 @@ export function FeedbackBoard({ feedbacks, onAddFeedback, onRemoveFeedback }) {
   };
 
   return (
-    <section className="rounded-[28px] bg-white p-5 shadow-card lg:p-6">
+    <section
+      className={`rounded-[28px] border p-5 shadow-card lg:p-6 ${
+        active ? 'border-slate-950 bg-white' : 'border-slate-200/80 bg-white'
+      }`}
+    >
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-            Feedback
+            Contact Us
           </p>
-          <h2 className="mt-2 text-xl font-bold text-slate-950">본사 전달 의견함</h2>
+          <h2 className="mt-2 text-xl font-bold text-slate-950">운영팀에 의견 보내기</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            로컬 소비 메모와 분리된 문의 전용 영역입니다. 개선 요청과 오류 제보는 여기로 남깁니다.
+          </p>
         </div>
         <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
           전달 대기 보관
@@ -63,7 +70,7 @@ export function FeedbackBoard({ feedbacks, onAddFeedback, onRemoveFeedback }) {
           className="rounded-2xl bg-slate-950 px-4 py-4 text-base font-semibold text-white"
           type="submit"
         >
-          본사 전달함에 저장
+          Contact Us에 저장
         </button>
       </form>
 

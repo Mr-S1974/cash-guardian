@@ -1,4 +1,9 @@
-import { formatCurrency, formatPercent } from '../lib/format';
+import { useEffect, useState } from 'react';
+import {
+  formatCurrency,
+  formatNumericInput,
+  formatPercent,
+} from '../lib/format';
 
 function ProgressRow({ label, spent, limit, tone = 'teal' }) {
   const rate = limit > 0 ? Math.min(spent / limit, 1) : 0;
@@ -32,20 +37,24 @@ export function MonthlyGuidelinePanel({
   summary,
   onSetGuidelines,
 }) {
+  const [form, setForm] = useState(guidelines);
+
+  useEffect(() => {
+    setForm(guidelines);
+  }, [guidelines]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
     await onSetGuidelines({
-      total: String(formData.get('total') || ''),
-      card: String(formData.get('card') || ''),
-      cash: String(formData.get('cash') || ''),
-      memo: String(formData.get('memo') || ''),
+      total: String(form.total || ''),
+      card: String(form.card || ''),
+      cash: String(form.cash || ''),
+      memo: String(form.memo || ''),
     });
   };
 
   return (
-    <section className="rounded-[28px] border border-line bg-white p-5 shadow-card lg:p-6">
+    <section className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-card lg:p-6">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
@@ -67,30 +76,34 @@ export function MonthlyGuidelinePanel({
         <div className="grid gap-3 md:grid-cols-3">
           <input
             className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-semibold text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
-            defaultValue={guidelines.total || ''}
+            value={formatNumericInput(form.total || '')}
             inputMode="numeric"
             name="total"
+            onChange={(event) => setForm((current) => ({ ...current, total: event.target.value }))}
             placeholder="합계 가이드라인"
           />
           <input
             className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-semibold text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
-            defaultValue={guidelines.card || ''}
+            value={formatNumericInput(form.card || '')}
             inputMode="numeric"
             name="card"
+            onChange={(event) => setForm((current) => ({ ...current, card: event.target.value }))}
             placeholder="카드 가이드라인"
           />
           <input
             className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-semibold text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
-            defaultValue={guidelines.cash || ''}
+            value={formatNumericInput(form.cash || '')}
             inputMode="numeric"
             name="cash"
+            onChange={(event) => setForm((current) => ({ ...current, cash: event.target.value }))}
             placeholder="현금 가이드라인"
           />
         </div>
         <textarea
           className="min-h-24 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
-          defaultValue={guidelines.memo || ''}
+          value={form.memo || ''}
           name="memo"
+          onChange={(event) => setForm((current) => ({ ...current, memo: event.target.value }))}
           placeholder="이번 달 소비 원칙 메모"
         />
         <button

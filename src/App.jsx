@@ -40,8 +40,9 @@ export default function App() {
             로컬 데이터를 불러오는 중입니다.
           </div>
         ) : (
-          <main className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr] lg:gap-6">
-            <section className="grid gap-5">
+          <>
+            <main className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr] lg:gap-6">
+              <section className="grid gap-5">
               <section className="grid gap-4 md:grid-cols-2">
                 <FinanceCard
                   eyebrow="총수입"
@@ -80,13 +81,11 @@ export default function App() {
               />
 
               <TransactionList transactions={data.transactions.slice(0, 6)} />
-            </section>
+              </section>
 
-            <aside className="grid gap-5 self-start lg:sticky lg:top-6">
-              <StorageSelector value={storageTarget} onChange={setStorageTarget} />
+              <aside className="grid gap-5 self-start lg:sticky lg:top-6">
+                <StorageSelector value={storageTarget} onChange={setStorageTarget} />
 
-              {storageTarget === 'local' ? (
-                <>
                   <SpendingForm
                     incomeSources={data.incomeSources || []}
                     onAddTransaction={actions.addTransaction}
@@ -98,36 +97,38 @@ export default function App() {
                     onAddWatchlist={actions.addWatchlist}
                     onRemoveWatchlist={actions.removeWatchlist}
                   />
-                </>
-              ) : (
-                <FeedbackBoard
-                  feedbacks={data.feedbacks || []}
-                  onAddFeedback={actions.addFeedback}
-                  onRemoveFeedback={actions.removeFeedback}
-                />
-              )}
 
-              <section className="rounded-[28px] bg-slate-950 p-5 text-white shadow-card lg:p-6">
+                <section className="rounded-[28px] bg-slate-950 p-5 text-white shadow-card lg:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                   Storage
                 </p>
                 <h2 className="mt-2 text-2xl font-bold">CASH GUARDIAN</h2>
                 <p className="mt-4 text-sm leading-7 text-white/75">
                   {storageTarget === 'local'
-                    ? '이 앱의 데이터는 서버가 아니라 이 기기의 로컬 저장소에만 남습니다. 로그인 없이도 빠르게 쓰고, 민감한 소비 정보는 내 기기 안에서만 관리하는 흐름입니다.'
-                    : '본사 전달함은 운영 의견을 분리 정리하기 위한 영역입니다. 현재는 전달 대기 상태로 로컬에 보관되며, 후속 단계에서 실제 전송 기능을 연결할 수 있습니다.'}
+                    ? '현재 작업 대상은 내 기기 로컬 저장소입니다. 월간 수입, 지출, 메모, 영수증은 이 브라우저 안에만 저장됩니다.'
+                    : '문의/제안은 페이지 하단 Contact Us 영역에서 따로 관리합니다. 소비 메모와 운영 문의가 섞이지 않도록 분리했습니다.'}
                 </p>
-              </section>
+                </section>
 
-              <button
-                className="rounded-2xl border border-slate-200 bg-transparent px-4 py-4 text-sm font-semibold text-slate-500"
-                onClick={actions.resetDemoData}
-                type="button"
-              >
-                데모 데이터로 초기화
-              </button>
-            </aside>
-          </main>
+                <button
+                  className="rounded-2xl border border-slate-200 bg-transparent px-4 py-4 text-sm font-semibold text-slate-500"
+                  onClick={actions.resetDemoData}
+                  type="button"
+                >
+                  데모 데이터로 초기화
+                </button>
+              </aside>
+            </main>
+
+            <section className="mt-6">
+              <FeedbackBoard
+                active={storageTarget === 'hq'}
+                feedbacks={data.feedbacks || []}
+                onAddFeedback={actions.addFeedback}
+                onRemoveFeedback={actions.removeFeedback}
+              />
+            </section>
+          </>
         )}
       </div>
     </div>

@@ -92,7 +92,7 @@ export function WatchlistPanel({ watchlist, onAddWatchlist, onRemoveWatchlist })
   };
 
   return (
-    <section className="rounded-[28px] bg-white p-5 shadow-card lg:p-6">
+    <section className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-card lg:p-6">
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">

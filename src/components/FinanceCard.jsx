@@ -1,6 +1,6 @@
 export function FinanceCard({ eyebrow, title, value, subValue, tone = 'light' }) {
   const tones = {
-    light: 'bg-white text-slate-950',
+    light: 'border border-slate-200/80 bg-white text-slate-950',
     accent: 'bg-slate-950 text-white',
     mint: 'bg-teal-700 text-white',
   };

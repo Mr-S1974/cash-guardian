@@ -124,7 +124,7 @@ export function SpendingForm({
   return (
     <div className="grid gap-4">
       <form
-        className="rounded-[28px] bg-white p-5 shadow-card"
+        className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-card"
         onSubmit={handleIncomeSubmit}
       >
         <div className="flex items-center justify-between gap-4">
@@ -186,7 +186,10 @@ export function SpendingForm({
         </button>
       </form>
 
-      <form className="rounded-[28px] bg-white p-5 shadow-card lg:p-6" onSubmit={handleSubmit}>
+      <form
+        className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-card lg:p-6"
+        onSubmit={handleSubmit}
+      >
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
             Quick Capture
