@@ -51,17 +51,24 @@ export function useLocalFinanceData() {
     await saveFinanceSnapshot(nextData);
   };
 
-  const setSalary = async (salary) => {
-    const normalizedSalary =
-      typeof salary === 'object' ? Number(salary.salary) || 0 : Number(salary) || 0;
-    const salaryMemo =
-      typeof salary === 'object' ? salary.memo?.trim() || '' : dataRef.current.salaryMemo || '';
-
+  const setIncomeSources = async (incomeSources) => {
     await persist({
       ...dataRef.current,
-      salary: normalizedSalary,
-      salaryMemo,
+      incomeSources,
       monthlyBudgetMonth: formatMonth(new Date()),
+    });
+  };
+
+  const setMonthlyGuidelines = async (guidelines) => {
+    await persist({
+      ...dataRef.current,
+      monthlyGuidelines: {
+        ...dataRef.current.monthlyGuidelines,
+        total: parseNumericInput(guidelines.total),
+        card: parseNumericInput(guidelines.card),
+        cash: parseNumericInput(guidelines.cash),
+        memo: guidelines.memo?.trim() || '',
+      },
     });
   };
 
@@ -186,23 +193,27 @@ export function useLocalFinanceData() {
       .reduce((sum, transaction) => sum + transaction.amount, 0);
 
     const totalSpent = creditSpent + debitSpent + cashSpent;
-    const salary = data.salary || 0;
-    const creditThreshold = salary * 0.25;
-    const remainingSafeCredit = Math.max(creditThreshold - creditSpent, 0);
-    const overage = Math.max(creditSpent - creditThreshold, 0);
+    const cardSpent = creditSpent + debitSpent;
+    const totalIncome = (data.incomeSources || []).reduce(
+      (sum, incomeSource) => sum + (Number(incomeSource.amount) || 0),
+      0,
+    );
+    const guidelineTotal = data.monthlyGuidelines?.total || 0;
+    const guidelineCard = data.monthlyGuidelines?.card || 0;
+    const guidelineCash = data.monthlyGuidelines?.cash || 0;
 
     return {
-      salary,
+      totalIncome,
       creditSpent,
       debitSpent,
+      cardSpent,
       cashSpent,
       totalSpent,
-      creditThreshold,
-      remainingSafeCredit,
-      overage,
-      creditUsageRate: salary > 0 ? creditSpent / salary : 0,
-      totalUsageRate: salary > 0 ? totalSpent / salary : 0,
-      shouldWarn: salary > 0 && creditSpent > creditThreshold,
+      guidelineTotal,
+      guidelineCard,
+      guidelineCash,
+      totalUsageRate: totalIncome > 0 ? totalSpent / totalIncome : 0,
+      cardUsageRate: totalIncome > 0 ? cardSpent / totalIncome : 0,
     };
   }, [data]);
 
@@ -211,7 +222,8 @@ export function useLocalFinanceData() {
     summary,
     status,
     actions: {
-      setSalary,
+      setIncomeSources,
+      setMonthlyGuidelines,
       addTransaction,
       removeTransaction,
       resetDemoData,

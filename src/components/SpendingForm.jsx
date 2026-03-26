@@ -28,23 +28,17 @@ function readFileAsDataUrl(file) {
 
 export function SpendingForm({
   onAddTransaction,
-  onSetSalary,
-  defaultSalary,
-  defaultSalaryMemo,
+  onSetIncomeSources,
+  incomeSources,
 }) {
-  const [salaryInput, setSalaryInput] = useState(defaultSalary);
-  const [salaryMemoInput, setSalaryMemoInput] = useState(defaultSalaryMemo || '');
+  const [incomeForm, setIncomeForm] = useState(incomeSources);
   const [form, setForm] = useState(initialForm);
   const [ocrStatus, setOcrStatus] = useState('idle');
   const [ocrMessage, setOcrMessage] = useState('');
 
   useEffect(() => {
-    setSalaryInput(defaultSalary);
-  }, [defaultSalary]);
-
-  useEffect(() => {
-    setSalaryMemoInput(defaultSalaryMemo || '');
-  }, [defaultSalaryMemo]);
+    setIncomeForm(incomeSources);
+  }, [incomeSources]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -54,12 +48,15 @@ export function SpendingForm({
     setOcrMessage('');
   };
 
-  const handleSalarySubmit = async (event) => {
+  const handleIncomeSubmit = async (event) => {
     event.preventDefault();
-    await onSetSalary({
-      salary: parseNumericInput(salaryInput),
-      memo: salaryMemoInput,
-    });
+    await onSetIncomeSources(
+      incomeForm.map((incomeSource) => ({
+        ...incomeSource,
+        amount: parseNumericInput(incomeSource.amount),
+        memo: incomeSource.memo?.trim() || '',
+      })),
+    );
   };
 
   const handleReceiptChange = async (event) => {
@@ -128,48 +125,64 @@ export function SpendingForm({
     <div className="grid gap-4">
       <form
         className="rounded-[28px] bg-white p-5 shadow-card"
-        onSubmit={handleSalarySubmit}
+        onSubmit={handleIncomeSubmit}
       >
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-              Zero-Knowledge Local Storage
+              Monthly Income
             </p>
-            <h2 className="mt-2 text-xl font-bold text-slate-950">월급 기준선 설정</h2>
+            <h2 className="mt-2 text-xl font-bold text-slate-950">수입 항목 설정</h2>
           </div>
           <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
             기기 내 로컬 저장소
           </span>
         </div>
 
-        <label className="mt-5 block text-sm font-semibold text-slate-700">
-          이번 달 실수령 월급
-          <input
-            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-lg font-semibold text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
-            inputMode="numeric"
-            value={formatNumericInput(salaryInput)}
-            onChange={(event) => setSalaryInput(event.target.value)}
-            placeholder="3200000"
-          />
-        </label>
-        <p className="mt-3 text-sm text-slate-500">
-          현재 기준선 {formatCurrency(parseNumericInput(salaryInput))}
+        <div className="mt-5 grid gap-4">
+          {incomeForm.map((incomeSource, index) => (
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4" key={incomeSource.id}>
+              <p className="text-sm font-semibold text-slate-950">{incomeSource.label}</p>
+              <input
+                className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-lg font-semibold text-slate-950 outline-none transition focus:border-teal-500"
+                inputMode="numeric"
+                value={formatNumericInput(incomeSource.amount)}
+                onChange={(event) =>
+                  setIncomeForm((current) =>
+                    current.map((item, itemIndex) =>
+                      itemIndex === index ? { ...item, amount: event.target.value } : item,
+                    ),
+                  )
+                }
+                placeholder={`${incomeSource.label} 금액`}
+              />
+              <textarea
+                className="mt-3 min-h-20 w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500"
+                value={incomeSource.memo}
+                onChange={(event) =>
+                  setIncomeForm((current) =>
+                    current.map((item, itemIndex) =>
+                      itemIndex === index ? { ...item, memo: event.target.value } : item,
+                    ),
+                  )
+                }
+                placeholder={`${incomeSource.label} 메모`}
+              />
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-sm text-slate-500">
+          현재 총수입{' '}
+          {formatCurrency(
+            incomeForm.reduce((sum, incomeSource) => sum + parseNumericInput(incomeSource.amount), 0),
+          )}
         </p>
-        <label className="mt-4 block text-sm font-semibold text-slate-700">
-          수입 메모
-          <textarea
-            className="mt-2 min-h-24 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
-            value={salaryMemoInput}
-            onChange={(event) => setSalaryMemoInput(event.target.value)}
-            placeholder="예: 기본급 + 식대 + 고정 수당 포함"
-          />
-        </label>
 
         <button
           className="mt-4 w-full rounded-2xl bg-slate-950 px-4 py-4 text-base font-semibold text-white"
           type="submit"
         >
-          월급 저장
+          수입 항목 저장
         </button>
       </form>
 

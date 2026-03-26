@@ -1,6 +1,6 @@
-import { AlertBanner } from './components/AlertBanner';
 import { FeedbackBoard } from './components/FeedbackBoard';
 import { FinanceCard } from './components/FinanceCard';
+import { MonthlyGuidelinePanel } from './components/MonthlyGuidelinePanel';
 import { SpendingForm } from './components/SpendingForm';
 import { StorageSelector } from './components/StorageSelector';
 import { TransactionList } from './components/TransactionList';
@@ -44,25 +44,23 @@ export default function App() {
             <section className="grid gap-5">
               <section className="grid gap-4 md:grid-cols-2">
                 <FinanceCard
-                  eyebrow="월급"
-                  title="이번 달 기준선"
-                  value={formatCurrency(summary.salary)}
-                  subValue={
-                    data.salaryMemo || '월급 대비 결제 수단별 사용량을 실시간으로 비교합니다.'
-                  }
+                  eyebrow="총수입"
+                  title="이번 달 기준"
+                  value={formatCurrency(summary.totalIncome)}
+                  subValue="월급, 성과금, 부수입을 합산한 월간 수입입니다."
                   tone="accent"
+                />
+                <FinanceCard
+                  eyebrow="카드 합계"
+                  title="현재 사용"
+                  value={formatCurrency(summary.cardSpent)}
+                  subValue={`수입 대비 ${formatPercent(summary.cardUsageRate)}`}
+                  tone="light"
                 />
                 <FinanceCard
                   eyebrow="신용카드"
                   title="현재 사용"
                   value={formatCurrency(summary.creditSpent)}
-                  subValue={`월급 대비 ${formatPercent(summary.creditUsageRate)}`}
-                  tone="light"
-                />
-                <FinanceCard
-                  eyebrow="체크카드"
-                  title="현재 사용"
-                  value={formatCurrency(summary.debitSpent)}
                   subValue={`총 사용 ${formatCurrency(summary.totalSpent)}`}
                   tone="mint"
                 />
@@ -75,54 +73,11 @@ export default function App() {
                 />
               </section>
 
-              <AlertBanner
-                salary={summary.salary}
-                creditSpent={summary.creditSpent}
-                overage={summary.overage}
-                visible={summary.shouldWarn}
+              <MonthlyGuidelinePanel
+                guidelines={data.monthlyGuidelines || {}}
+                onSetGuidelines={actions.setMonthlyGuidelines}
+                summary={summary}
               />
-
-              <button
-                className="w-full rounded-[26px] border border-slate-200 bg-white px-5 py-5 text-left shadow-card transition hover:border-teal-200 hover:bg-teal-50"
-                type="button"
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                  Sponsored Tip
-                </p>
-                <p className="mt-2 text-lg font-bold leading-tight text-slate-950 lg:text-xl">
-                  체크카드 전환으로 3만원 방어하기
-                </p>
-              </button>
-
-              <section className="rounded-[28px] border border-line bg-white p-5 shadow-card lg:p-6">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                      Guardrail
-                    </p>
-                    <h2 className="mt-2 text-xl font-bold text-slate-950 lg:text-2xl">
-                      안전 신용카드 한도
-                    </h2>
-                    <p className="mt-2 break-words text-[clamp(1.4rem,2vw,2.1rem)] font-bold leading-tight tracking-[-0.03em] text-slate-950 [overflow-wrap:anywhere]">
-                      {formatCurrency(summary.creditThreshold)}
-                    </p>
-                  </div>
-                  <p className="text-sm leading-6 text-slate-600 lg:max-w-sm lg:text-right">
-                    남은 안전 구간 {formatCurrency(summary.remainingSafeCredit)}. 신용카드 결제가
-                    방어선을 넘으면 체크카드 전환 CTA가 바로 보이도록 설계했습니다.
-                  </p>
-                </div>
-                <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100">
-                  <div
-                    className={`h-full rounded-full ${
-                      summary.shouldWarn ? 'bg-red-500' : 'bg-teal-600'
-                    }`}
-                    style={{
-                      width: `${Math.min(summary.creditUsageRate * 100, 100)}%`,
-                    }}
-                  />
-                </div>
-              </section>
 
               <TransactionList transactions={data.transactions.slice(0, 6)} />
             </section>
@@ -133,10 +88,9 @@ export default function App() {
               {storageTarget === 'local' ? (
                 <>
                   <SpendingForm
-                    defaultSalary={data.salary}
-                    defaultSalaryMemo={data.salaryMemo || ''}
+                    incomeSources={data.incomeSources || []}
                     onAddTransaction={actions.addTransaction}
-                    onSetSalary={actions.setSalary}
+                    onSetIncomeSources={actions.setIncomeSources}
                   />
 
                   <WatchlistPanel

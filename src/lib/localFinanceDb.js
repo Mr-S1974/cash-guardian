@@ -4,8 +4,32 @@ const STORE_NAME = 'finance_snapshots';
 const PRIMARY_KEY = 'singleton';
 
 export const defaultFinanceData = {
-  salary: 3200000,
-  salaryMemo: '세후 기준 월급과 정기 수당 포함',
+  incomeSources: [
+    {
+      id: 'income-salary',
+      label: '월급',
+      amount: 3200000,
+      memo: '세후 기준 월급',
+    },
+    {
+      id: 'income-bonus',
+      label: '보너스/성과금',
+      amount: 250000,
+      memo: '분기 인센티브 안분',
+    },
+    {
+      id: 'income-side',
+      label: '부수입',
+      amount: 120000,
+      memo: '소규모 외주/판매',
+    },
+  ],
+  monthlyGuidelines: {
+    total: 1800000,
+    card: 1200000,
+    cash: 200000,
+    memo: '합계는 총 수입의 절반 안쪽, 현금은 군것질/즉시 결제만 사용',
+  },
   monthlyBudgetMonth: new Date().toISOString().slice(0, 7),
   transactions: [
     {
@@ -117,6 +141,32 @@ function withStore(mode, handler) {
   );
 }
 
+function getDefaultIncomeSourcesFromLegacyPayload(payload) {
+  const legacyAmount = Number(payload.salary) || 0;
+  const legacyMemo = payload.salaryMemo || '세후 기준 월급';
+
+  return [
+    {
+      id: 'income-salary',
+      label: '월급',
+      amount: legacyAmount,
+      memo: legacyMemo,
+    },
+    {
+      id: 'income-bonus',
+      label: '보너스/성과금',
+      amount: 0,
+      memo: '',
+    },
+    {
+      id: 'income-side',
+      label: '부수입',
+      amount: 0,
+      memo: '',
+    },
+  ];
+}
+
 export async function getFinanceSnapshot() {
   const snapshot = await withStore('readonly', (store) => store.get(PRIMARY_KEY));
 
@@ -144,7 +194,11 @@ export async function getFinanceSnapshot() {
       ...defaultFinanceData,
       ...snapshot.payload,
       transactions,
-      salaryMemo: snapshot.payload.salaryMemo || defaultFinanceData.salaryMemo,
+      incomeSources: snapshot.payload.incomeSources || getDefaultIncomeSourcesFromLegacyPayload(snapshot.payload),
+      monthlyGuidelines: {
+        ...defaultFinanceData.monthlyGuidelines,
+        ...(snapshot.payload.monthlyGuidelines || {}),
+      },
       feedbacks,
       watchlist: snapshot.payload.watchlist || defaultFinanceData.watchlist,
     };
