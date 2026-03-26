@@ -37,7 +37,7 @@ export default function App() {
         ) : (
           <main className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr] lg:gap-6">
             <section className="grid gap-5">
-              <section className="grid gap-4 lg:grid-cols-2">
+              <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <FinanceCard
                   eyebrow="월급"
                   title="이번 달 기준선"
@@ -45,29 +45,27 @@ export default function App() {
                   subValue="월급 대비 결제 수단별 사용량을 실시간으로 비교합니다."
                   tone="accent"
                 />
-                <section className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
-                  <FinanceCard
-                    eyebrow="신용카드"
-                    title="현재 사용"
-                    value={formatCurrency(summary.creditSpent)}
-                    subValue={`월급 대비 ${formatPercent(summary.creditUsageRate)}`}
-                    tone="light"
-                  />
-                  <FinanceCard
-                    eyebrow="체크카드"
-                    title="현재 사용"
-                    value={formatCurrency(summary.debitSpent)}
-                    subValue={`총 사용 ${formatCurrency(summary.totalSpent)}`}
-                    tone="mint"
-                  />
-                  <FinanceCard
-                    eyebrow="현금"
-                    title="현재 사용"
-                    value={formatCurrency(summary.cashSpent)}
-                    subValue="카드 외 직접 지출 흐름"
-                    tone="light"
-                  />
-                </section>
+                <FinanceCard
+                  eyebrow="신용카드"
+                  title="현재 사용"
+                  value={formatCurrency(summary.creditSpent)}
+                  subValue={`월급 대비 ${formatPercent(summary.creditUsageRate)}`}
+                  tone="light"
+                />
+                <FinanceCard
+                  eyebrow="체크카드"
+                  title="현재 사용"
+                  value={formatCurrency(summary.debitSpent)}
+                  subValue={`총 사용 ${formatCurrency(summary.totalSpent)}`}
+                  tone="mint"
+                />
+                <FinanceCard
+                  eyebrow="현금"
+                  title="현재 사용"
+                  value={formatCurrency(summary.cashSpent)}
+                  subValue="카드 외 직접 지출 흐름"
+                  tone="light"
+                />
               </section>
 
               <AlertBanner
