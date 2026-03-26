@@ -4,6 +4,7 @@ import {
   formatNumericInput,
   parseNumericInput,
 } from '../lib/format';
+import { parseReceiptText } from '../lib/receiptOcr';
 
 const initialForm = {
   type: 'credit',
@@ -13,6 +14,7 @@ const initialForm = {
   memo: '',
   receiptImage: '',
   receiptName: '',
+  spentAt: '',
 };
 
 function readFileAsDataUrl(file) {
@@ -33,6 +35,8 @@ export function SpendingForm({
   const [salaryInput, setSalaryInput] = useState(defaultSalary);
   const [salaryMemoInput, setSalaryMemoInput] = useState(defaultSalaryMemo || '');
   const [form, setForm] = useState(initialForm);
+  const [ocrStatus, setOcrStatus] = useState('idle');
+  const [ocrMessage, setOcrMessage] = useState('');
 
   useEffect(() => {
     setSalaryInput(defaultSalary);
@@ -46,6 +50,8 @@ export function SpendingForm({
     event.preventDefault();
     await onAddTransaction(form);
     setForm(initialForm);
+    setOcrStatus('idle');
+    setOcrMessage('');
   };
 
   const handleSalarySubmit = async (event) => {
@@ -60,10 +66,13 @@ export function SpendingForm({
     const file = event.target.files?.[0];
 
     if (!file) {
+      setOcrStatus('idle');
+      setOcrMessage('');
       setForm((current) => ({
         ...current,
         receiptImage: '',
         receiptName: '',
+        spentAt: '',
       }));
       return;
     }
@@ -74,6 +83,45 @@ export function SpendingForm({
       receiptImage,
       receiptName: file.name,
     }));
+
+    setOcrStatus('running');
+    setOcrMessage('영수증 텍스트를 분석하는 중입니다.');
+
+    try {
+      const { createWorker } = await import('tesseract.js');
+      const worker = await createWorker('kor+eng', 1, {
+        logger: (message) => {
+          if (message.status === 'recognizing text' && typeof message.progress === 'number') {
+            setOcrMessage(`영수증 분석 중 ${Math.round(message.progress * 100)}%`);
+          }
+        },
+      });
+      const result = await worker.recognize(file);
+      await worker.terminate();
+
+      const parsedReceipt = parseReceiptText(result.data.text || '');
+
+      setForm((current) => ({
+        ...current,
+        receiptImage,
+        receiptName: file.name,
+        merchant: parsedReceipt.merchant || current.merchant,
+        amount: parsedReceipt.amount ? String(parsedReceipt.amount) : current.amount,
+        category: parsedReceipt.category || current.category,
+        spentAt: parsedReceipt.spentAt || current.spentAt,
+        memo: current.memo
+          ? current.memo
+          : parsedReceipt.rawText
+            ? `OCR 메모\n${parsedReceipt.rawText.slice(0, 300)}`
+            : '',
+      }));
+
+      setOcrStatus('done');
+      setOcrMessage('영수증 분석이 완료되었습니다. 자동 입력된 내용을 확인하세요.');
+    } catch {
+      setOcrStatus('error');
+      setOcrMessage('영수증 자동입력에 실패했습니다. 사진은 저장되며 항목은 직접 수정할 수 있습니다.');
+    }
   };
 
   return (
@@ -216,6 +264,19 @@ export function SpendingForm({
               type="file"
             />
           </label>
+          {ocrStatus !== 'idle' ? (
+            <div
+              className={`rounded-2xl px-4 py-3 text-sm font-medium ${
+                ocrStatus === 'error'
+                  ? 'bg-rose-50 text-rose-700'
+                  : ocrStatus === 'done'
+                    ? 'bg-teal-50 text-teal-700'
+                    : 'bg-slate-100 text-slate-600'
+              }`}
+            >
+              {ocrMessage}
+            </div>
+          ) : null}
           {form.receiptImage ? (
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
               <div className="flex items-center justify-between gap-3">
@@ -229,6 +290,7 @@ export function SpendingForm({
                       ...current,
                       receiptImage: '',
                       receiptName: '',
+                      spentAt: '',
                     }))
                   }
                   type="button"
