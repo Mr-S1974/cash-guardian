@@ -12,6 +12,10 @@ import { formatCurrency, formatPercent } from './lib/format';
 export default function App() {
   const [storageTarget, setStorageTarget] = useState('local');
   const { data, summary, status, actions } = useLocalFinanceData();
+  const contactEndpoint =
+    import.meta.env.VITE_CONTACT_ENDPOINT || (import.meta.env.PROD ? '/api/contact' : '');
+  const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || '';
+  const feedbackDeliveryMethod = contactEndpoint ? 'endpoint' : contactEmail ? 'email' : 'local';
 
   return (
     <div className="min-h-screen bg-mist text-ink">
@@ -104,9 +108,8 @@ export default function App() {
                 </p>
                 <h2 className="mt-2 text-2xl font-bold">CASH GUARDIAN</h2>
                 <p className="mt-4 text-sm leading-7 text-white/75">
-                  {storageTarget === 'local'
-                    ? '현재 작업 대상은 내 기기 로컬 저장소입니다. 월간 수입, 지출, 메모, 영수증은 이 브라우저 안에만 저장됩니다.'
-                    : '문의/제안은 페이지 하단 Contact Us 영역에서 따로 관리합니다. 소비 메모와 운영 문의가 섞이지 않도록 분리했습니다.'}
+                  현재 작업 대상은 내 기기 로컬 저장소입니다. 월간 수입, 지출, 메모, 영수증은 이
+                  브라우저 안에만 저장됩니다. Contact Us는 하단에서 별도로 관리됩니다.
                 </p>
                 </section>
 
@@ -122,10 +125,12 @@ export default function App() {
 
             <section className="mt-6">
               <FeedbackBoard
-                active={storageTarget === 'hq'}
                 feedbacks={data.feedbacks || []}
                 onAddFeedback={actions.addFeedback}
                 onRemoveFeedback={actions.removeFeedback}
+                contactEndpoint={contactEndpoint}
+                deliveryMethod={feedbackDeliveryMethod}
+                contactEmail={contactEmail}
               />
             </section>
           </>

@@ -14,6 +14,29 @@ Upon first visit to the site, user will be asked to provide baseline financial i
 
 When monetary information is submitted, the graphs and charts on the right side will dynamically update with the current data. Each time income and expense information is added, CG will aggregate the data and provide a comprehensive outline of spending habits to aid in money-saving.
 
+## Contact Us Delivery
+
+The bottom `Contact Us` form always keeps a local backup in the browser.
+
+- In production on Cloudflare Pages, the app sends feedback to the built-in Pages Function at `/api/contact`.
+- The function forwards the message to Telegram and the browser keeps a local backup either way.
+- `VITE_CONTACT_EMAIL` remains available as a fallback for local development or manual email draft flow.
+- If no endpoint or email fallback is set, feedback stays stored locally only.
+- Start from `.env.example` and copy values into your local `.env`.
+
+### Cloudflare Pages setup
+
+Set these variables in Cloudflare Pages:
+
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_CHAT_ID`
+
+Notes:
+
+- `TELEGRAM_BOT_TOKEN` is issued by `@BotFather`.
+- `TELEGRAM_CHAT_ID` is the private chat or group id that should receive alerts.
+- If you do not set these secrets, the app falls back to email draft or local-only storage.
+
 ## *Credits*
 
 Stephenie St.Hilaire - https://github.com/iamthesaint

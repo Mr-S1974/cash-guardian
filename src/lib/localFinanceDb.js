@@ -91,9 +91,9 @@ export const defaultFinanceData = {
   feedbacks: [
     {
       id: 'seed-feedback-1',
-      author: '매장 운영팀',
-      department: '강남점',
       text: '영수증 촬영 후 금액 자동 인식 기능이 다음 단계에서 필요합니다.',
+      deliveryStatus: 'local_only',
+      deliveredAt: null,
       createdAt: new Date().toISOString(),
     },
   ],
@@ -183,9 +183,9 @@ export async function getFinanceSnapshot() {
       snapshot.payload.feedbacks ||
       snapshot.payload.comments?.map((comment) => ({
         id: comment.id,
-        author: comment.author || '익명',
-        department: '미분류',
         text: comment.text || '',
+        deliveryStatus: comment.deliveryStatus || 'local_only',
+        deliveredAt: comment.deliveredAt || null,
         createdAt: comment.createdAt || new Date().toISOString(),
       })) ||
       defaultFinanceData.feedbacks;

@@ -115,9 +115,9 @@ export function useLocalFinanceData() {
   const addFeedback = async (feedback) => {
     const nextFeedback = {
       id: crypto.randomUUID(),
-      author: feedback.author?.trim() || '익명',
-      department: feedback.department?.trim() || '미분류',
       text: feedback.text?.trim() || '',
+      deliveryStatus: feedback.deliveryStatus || 'local_only',
+      deliveredAt: feedback.deliveredAt || null,
       createdAt: new Date().toISOString(),
     };
 
