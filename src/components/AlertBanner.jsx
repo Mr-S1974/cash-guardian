@@ -33,7 +33,7 @@ export function AlertBanner({ salary, creditSpent, overage, visible }) {
           사용은 <span className="font-semibold">{formatCurrency(creditSpent)}</span>입니다.
         </p>
         <p className="text-red-700">
-          오늘부터 고정 지출 외 결제 수단을 체크카드로 바꾸면 다음 결제일 방어 확률이 높아집니다.
+          데이터는 서버가 아닌 이 기기의 로컬 저장소에만 보관됩니다. 오늘부터 고정 지출 외 결제 수단을 체크카드로 바꾸면 다음 결제일 방어 확률이 높아집니다.
         </p>
       </div>
     </section>

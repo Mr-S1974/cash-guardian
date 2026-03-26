@@ -35,12 +35,12 @@ export function SpendingForm({ onAddTransaction, onSetSalary, defaultSalary }) {
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-              Zero-Knowledge Local DB
+              Zero-Knowledge Local Storage
             </p>
             <h2 className="mt-2 text-xl font-bold text-slate-950">월급 기준선 설정</h2>
           </div>
           <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-            IndexedDB only
+            기기 내 로컬 저장소
           </span>
         </div>
 
@@ -63,7 +63,7 @@ export function SpendingForm({ onAddTransaction, onSetSalary, defaultSalary }) {
         </button>
       </form>
 
-      <form className="rounded-[28px] bg-white p-5 shadow-card" onSubmit={handleSubmit}>
+      <form className="rounded-[28px] bg-white p-5 shadow-card lg:p-6" onSubmit={handleSubmit}>
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
             Quick Capture
@@ -72,7 +72,7 @@ export function SpendingForm({ onAddTransaction, onSetSalary, defaultSalary }) {
         </div>
 
         <div className="mt-5 grid gap-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <button
               className={`rounded-2xl px-4 py-3 text-sm font-semibold ${
                 form.type === 'credit'
@@ -94,6 +94,17 @@ export function SpendingForm({ onAddTransaction, onSetSalary, defaultSalary }) {
               onClick={() => setForm((current) => ({ ...current, type: 'debit' }))}
             >
               체크카드
+            </button>
+            <button
+              className={`rounded-2xl px-4 py-3 text-sm font-semibold ${
+                form.type === 'cash'
+                  ? 'bg-amber-100 text-amber-700'
+                  : 'bg-slate-100 text-slate-500'
+              }`}
+              type="button"
+              onClick={() => setForm((current) => ({ ...current, type: 'cash' }))}
+            >
+              현금
             </button>
           </div>
 
@@ -128,7 +139,7 @@ export function SpendingForm({ onAddTransaction, onSetSalary, defaultSalary }) {
           className="mt-4 w-full rounded-2xl bg-teal-600 px-4 py-4 text-base font-semibold text-white"
           type="submit"
         >
-          로컬 DB에 저장
+          로컬 저장소에 저장
         </button>
       </form>
     </div>

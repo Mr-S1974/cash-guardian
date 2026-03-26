@@ -64,7 +64,12 @@ export function useLocalFinanceData() {
       id: crypto.randomUUID(),
       merchant: transaction.merchant?.trim() || '직접 입력',
       category: transaction.category?.trim() || '기타',
-      type: transaction.type === 'debit' ? 'debit' : 'credit',
+      type:
+        transaction.type === 'debit'
+          ? 'debit'
+          : transaction.type === 'cash'
+            ? 'cash'
+            : 'credit',
       amount: Number(transaction.amount) || 0,
       spentAt: transaction.spentAt || new Date().toISOString(),
     };
@@ -104,7 +109,11 @@ export function useLocalFinanceData() {
       .filter((transaction) => transaction.type === 'debit')
       .reduce((sum, transaction) => sum + transaction.amount, 0);
 
-    const totalSpent = creditSpent + debitSpent;
+    const cashSpent = currentTransactions
+      .filter((transaction) => transaction.type === 'cash')
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
+
+    const totalSpent = creditSpent + debitSpent + cashSpent;
     const salary = data.salary || 0;
     const creditThreshold = salary * 0.25;
     const remainingSafeCredit = Math.max(creditThreshold - creditSpent, 0);
@@ -114,6 +123,7 @@ export function useLocalFinanceData() {
       salary,
       creditSpent,
       debitSpent,
+      cashSpent,
       totalSpent,
       creditThreshold,
       remainingSafeCredit,

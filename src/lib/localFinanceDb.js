@@ -31,6 +31,14 @@ export const defaultFinanceData = {
       category: '생활',
       spentAt: new Date().toISOString(),
     },
+    {
+      id: 'seed-cash-1',
+      type: 'cash',
+      merchant: '카페 현금 결제',
+      amount: 38000,
+      category: '간식',
+      spentAt: new Date().toISOString(),
+    },
   ],
   cards: {
     credit: {
@@ -38,6 +46,9 @@ export const defaultFinanceData = {
     },
     debit: {
       label: '체크카드',
+    },
+    cash: {
+      label: '현금',
     },
   },
   updatedAt: new Date().toISOString(),

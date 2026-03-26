@@ -6,6 +6,18 @@ function formatCurrency(value) {
   }).format(value);
 }
 
+function getTypeLabel(type) {
+  if (type === 'credit') {
+    return '신용카드';
+  }
+
+  if (type === 'debit') {
+    return '체크카드';
+  }
+
+  return '현금';
+}
+
 export function TransactionList({ transactions }) {
   return (
     <section className="rounded-[28px] bg-white p-5 shadow-card">
@@ -32,12 +44,16 @@ export function TransactionList({ transactions }) {
                 {transaction.merchant}
               </p>
               <p className="mt-1 text-sm text-slate-500">
-                {transaction.category} · {transaction.type === 'credit' ? '신용카드' : '체크카드'}
+                {transaction.category} · {getTypeLabel(transaction.type)}
               </p>
             </div>
             <p
               className={`shrink-0 text-base font-bold ${
-                transaction.type === 'credit' ? 'text-rose-600' : 'text-teal-700'
+                transaction.type === 'credit'
+                  ? 'text-rose-600'
+                  : transaction.type === 'debit'
+                    ? 'text-teal-700'
+                    : 'text-amber-700'
               }`}
             >
               {formatCurrency(transaction.amount)}
