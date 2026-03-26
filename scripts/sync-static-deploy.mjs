@@ -34,6 +34,7 @@ async function sync() {
     removeIfExists('manifest.webmanifest'),
     removeIfExists('service-worker.js'),
     removeIfExists('social-preview.png'),
+    removeIfExists('social-preview.jpeg'),
   ]);
 
   await Promise.all([
@@ -42,6 +43,7 @@ async function sync() {
     copyIfExists('manifest.webmanifest', 'manifest.webmanifest'),
     copyIfExists('service-worker.js', 'service-worker.js'),
     copyIfExists('social-preview.png', 'social-preview.png'),
+    copyIfExists('social-preview.jpeg', 'social-preview.jpeg'),
   ]);
 
   const builtHtml = await readFile(new URL('index.src.html', buildDir), 'utf8');
