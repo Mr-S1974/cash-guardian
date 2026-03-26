@@ -6,11 +6,13 @@ export function FinanceCard({ eyebrow, title, value, subValue, tone = 'light' })
   };
 
   return (
-    <article className={`rounded-[28px] p-5 shadow-card ${tones[tone]}`}>
+    <article className={`min-w-0 rounded-[28px] p-5 shadow-card lg:p-6 ${tones[tone]}`}>
       <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-60">{eyebrow}</p>
       <h3 className="mt-3 text-base font-medium opacity-80">{title}</h3>
-      <p className="mt-6 text-3xl font-bold tracking-tight">{value}</p>
-      <p className="mt-3 text-sm opacity-75">{subValue}</p>
+      <p className="mt-6 break-words text-[clamp(1.65rem,2.2vw,2.5rem)] font-bold leading-[1.05] tracking-[-0.04em] [overflow-wrap:anywhere]">
+        {value}
+      </p>
+      <p className="mt-3 text-sm leading-6 opacity-75">{subValue}</p>
     </article>
   );
 }

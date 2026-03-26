@@ -1,10 +1,4 @@
-function formatCurrency(value) {
-  return new Intl.NumberFormat('ko-KR', {
-    style: 'currency',
-    currency: 'KRW',
-    maximumFractionDigits: 0,
-  }).format(value);
-}
+import { formatCurrency } from '../lib/format';
 
 export function AlertBanner({ salary, creditSpent, overage, visible }) {
   if (!visible) {
@@ -13,7 +7,7 @@ export function AlertBanner({ salary, creditSpent, overage, visible }) {
 
   return (
     <section className="rounded-[28px] border border-red-200 bg-gradient-to-br from-rose-50 to-red-100 p-5 shadow-card">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-red-500">
             Spend Guard Alert
@@ -22,7 +16,7 @@ export function AlertBanner({ salary, creditSpent, overage, visible }) {
             신용카드 사용이 월급 25% 방어선을 넘었습니다.
           </h2>
         </div>
-        <div className="rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-red-700">
+        <div className="w-fit rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-red-700">
           초과 {formatCurrency(overage)}
         </div>
       </div>

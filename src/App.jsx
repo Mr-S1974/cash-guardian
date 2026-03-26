@@ -3,18 +3,7 @@ import { FinanceCard } from './components/FinanceCard';
 import { SpendingForm } from './components/SpendingForm';
 import { TransactionList } from './components/TransactionList';
 import { useLocalFinanceData } from './hooks/useLocalFinanceData';
-
-function formatCurrency(value) {
-  return new Intl.NumberFormat('ko-KR', {
-    style: 'currency',
-    currency: 'KRW',
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function formatPercent(value) {
-  return `${Math.round(value * 100)}%`;
-}
+import { formatCurrency, formatPercent } from './lib/format';
 
 export default function App() {
   const { data, summary, status, actions } = useLocalFinanceData();
@@ -56,7 +45,7 @@ export default function App() {
                   subValue="월급 대비 결제 수단별 사용량을 실시간으로 비교합니다."
                   tone="accent"
                 />
-                <section className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                <section className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
                   <FinanceCard
                     eyebrow="신용카드"
                     title="현재 사용"
@@ -107,8 +96,11 @@ export default function App() {
                       Guardrail
                     </p>
                     <h2 className="mt-2 text-xl font-bold text-slate-950 lg:text-2xl">
-                      안전 신용카드 한도 {formatCurrency(summary.creditThreshold)}
+                      안전 신용카드 한도
                     </h2>
+                    <p className="mt-2 break-words text-[clamp(1.4rem,2vw,2.1rem)] font-bold leading-tight tracking-[-0.03em] text-slate-950 [overflow-wrap:anywhere]">
+                      {formatCurrency(summary.creditThreshold)}
+                    </p>
                   </div>
                   <p className="text-sm leading-6 text-slate-600 lg:max-w-sm lg:text-right">
                     남은 안전 구간 {formatCurrency(summary.remainingSafeCredit)}. 신용카드 결제가

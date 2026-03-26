@@ -1,10 +1,4 @@
-function formatCurrency(value) {
-  return new Intl.NumberFormat('ko-KR', {
-    style: 'currency',
-    currency: 'KRW',
-    maximumFractionDigits: 0,
-  }).format(value);
-}
+import { formatCurrency } from '../lib/format';
 
 function getTypeLabel(type) {
   if (type === 'credit') {
@@ -48,7 +42,7 @@ export function TransactionList({ transactions }) {
               </p>
             </div>
             <p
-              className={`shrink-0 text-base font-bold ${
+              className={`shrink-0 text-right text-base font-bold tabular-nums ${
                 transaction.type === 'credit'
                   ? 'text-rose-600'
                   : transaction.type === 'debit'

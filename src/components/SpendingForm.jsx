@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatCurrency } from '../lib/format';
 
 const initialForm = {
   type: 'credit',
@@ -54,6 +55,9 @@ export function SpendingForm({ onAddTransaction, onSetSalary, defaultSalary }) {
             placeholder="3200000"
           />
         </label>
+        <p className="mt-3 text-sm text-slate-500">
+          현재 기준선 {formatCurrency(Number(salaryInput) || 0)}
+        </p>
 
         <button
           className="mt-4 w-full rounded-2xl bg-slate-950 px-4 py-4 text-base font-semibold text-white"
