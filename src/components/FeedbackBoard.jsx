@@ -63,7 +63,7 @@ export function FeedbackBoard({ feedbacks, onAddFeedback, onRemoveFeedback }) {
           className="rounded-2xl bg-slate-950 px-4 py-4 text-base font-semibold text-white"
           type="submit"
         >
-          의견 저장
+          본사 전달함에 저장
         </button>
       </form>
 

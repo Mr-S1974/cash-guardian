@@ -21,6 +21,9 @@ export function TransactionList({ transactions }) {
             This Month
           </p>
           <h2 className="mt-2 text-xl font-bold text-slate-950">최근 소비 흐름</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            이 영역의 메모는 거래 메모입니다. 본사 전달 의견은 별도 저장 장소에서 분리 관리됩니다.
+          </p>
         </div>
         <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
           로컬 저장

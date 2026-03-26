@@ -2,12 +2,15 @@ import { AlertBanner } from './components/AlertBanner';
 import { FeedbackBoard } from './components/FeedbackBoard';
 import { FinanceCard } from './components/FinanceCard';
 import { SpendingForm } from './components/SpendingForm';
+import { StorageSelector } from './components/StorageSelector';
 import { TransactionList } from './components/TransactionList';
 import { WatchlistPanel } from './components/WatchlistPanel';
+import { useState } from 'react';
 import { useLocalFinanceData } from './hooks/useLocalFinanceData';
 import { formatCurrency, formatPercent } from './lib/format';
 
 export default function App() {
+  const [storageTarget, setStorageTarget] = useState('local');
   const { data, summary, status, actions } = useLocalFinanceData();
 
   return (
@@ -122,20 +125,33 @@ export default function App() {
               </section>
 
               <TransactionList transactions={data.transactions.slice(0, 6)} />
-              <FeedbackBoard
-                feedbacks={data.feedbacks || []}
-                onAddFeedback={actions.addFeedback}
-                onRemoveFeedback={actions.removeFeedback}
-              />
             </section>
 
             <aside className="grid gap-5 self-start lg:sticky lg:top-6">
-              <SpendingForm
-                defaultSalary={data.salary}
-                defaultSalaryMemo={data.salaryMemo || ''}
-                onAddTransaction={actions.addTransaction}
-                onSetSalary={actions.setSalary}
-              />
+              <StorageSelector value={storageTarget} onChange={setStorageTarget} />
+
+              {storageTarget === 'local' ? (
+                <>
+                  <SpendingForm
+                    defaultSalary={data.salary}
+                    defaultSalaryMemo={data.salaryMemo || ''}
+                    onAddTransaction={actions.addTransaction}
+                    onSetSalary={actions.setSalary}
+                  />
+
+                  <WatchlistPanel
+                    watchlist={data.watchlist || []}
+                    onAddWatchlist={actions.addWatchlist}
+                    onRemoveWatchlist={actions.removeWatchlist}
+                  />
+                </>
+              ) : (
+                <FeedbackBoard
+                  feedbacks={data.feedbacks || []}
+                  onAddFeedback={actions.addFeedback}
+                  onRemoveFeedback={actions.removeFeedback}
+                />
+              )}
 
               <section className="rounded-[28px] bg-slate-950 p-5 text-white shadow-card lg:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
@@ -143,16 +159,11 @@ export default function App() {
                 </p>
                 <h2 className="mt-2 text-2xl font-bold">CASH GUARDIAN</h2>
                 <p className="mt-4 text-sm leading-7 text-white/75">
-                  이 앱의 데이터는 서버가 아니라 이 기기의 로컬 저장소에만 남습니다. 로그인 없이도
-                  빠르게 쓰고, 민감한 소비 정보는 내 기기 안에서만 관리하는 흐름입니다.
+                  {storageTarget === 'local'
+                    ? '이 앱의 데이터는 서버가 아니라 이 기기의 로컬 저장소에만 남습니다. 로그인 없이도 빠르게 쓰고, 민감한 소비 정보는 내 기기 안에서만 관리하는 흐름입니다.'
+                    : '본사 전달함은 운영 의견을 분리 정리하기 위한 영역입니다. 현재는 전달 대기 상태로 로컬에 보관되며, 후속 단계에서 실제 전송 기능을 연결할 수 있습니다.'}
                 </p>
               </section>
-
-              <WatchlistPanel
-                watchlist={data.watchlist || []}
-                onAddWatchlist={actions.addWatchlist}
-                onRemoveWatchlist={actions.removeWatchlist}
-              />
 
               <button
                 className="rounded-2xl border border-slate-200 bg-transparent px-4 py-4 text-sm font-semibold text-slate-500"
