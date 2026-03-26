@@ -1,8 +1,11 @@
 import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
 
 const rootDir = new URL('..', import.meta.url);
 const buildDir = new URL('../.static-build/', import.meta.url);
+const buildVersion =
+  process.env.CF_PAGES_COMMIT_SHA?.slice(0, 8) ||
+  process.env.GITHUB_SHA?.slice(0, 8) ||
+  Date.now().toString(36);
 
 async function pathExists(path) {
   try {
@@ -49,7 +52,11 @@ async function sync() {
   ]);
 
   const builtHtml = await readFile(new URL('index.src.html', buildDir), 'utf8');
-  await writeFile(new URL('index.html', rootDir), builtHtml, 'utf8');
+  const versionedHtml = builtHtml
+    .replace('/app-assets/app.js', `/app-assets/app.js?v=${buildVersion}`)
+    .replace('/app-assets/app.css', `/app-assets/app.css?v=${buildVersion}`);
+
+  await writeFile(new URL('index.html', rootDir), versionedHtml, 'utf8');
 
   if (!(await pathExists(new URL('icons', rootDir)))) {
     await mkdir(new URL('icons', rootDir), { recursive: true });
