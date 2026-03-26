@@ -1,5 +1,5 @@
-const CACHE_NAME = 'cash-guardian-v2';
-const APP_SHELL = ['/', '/manifest.webmanifest', '/icons/app-icon.svg'];
+const CACHE_NAME = 'cash-guardian-v3';
+const APP_SHELL = ['/app', '/manifest.webmanifest', '/icons/app-icon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
@@ -38,7 +38,7 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => {
           if (event.request.mode === 'navigate') {
-            return caches.match('/');
+            return caches.match('/app');
           }
 
           return Response.error();
