@@ -29,10 +29,8 @@ async function copyIfExists(fromRelativePath, toRelativePath) {
 
 async function sync() {
   await Promise.all([
-    removeIfExists('app'),
     removeIfExists('app-assets'),
     removeIfExists('icons'),
-    removeIfExists('_redirects'),
     removeIfExists('manifest.webmanifest'),
     removeIfExists('service-worker.js'),
     removeIfExists('social-preview.png'),
@@ -43,7 +41,6 @@ async function sync() {
   await Promise.all([
     copyIfExists('app-assets', 'app-assets'),
     copyIfExists('icons', 'icons'),
-    copyIfExists('_redirects', '_redirects'),
     copyIfExists('manifest.webmanifest', 'manifest.webmanifest'),
     copyIfExists('service-worker.js', 'service-worker.js'),
     copyIfExists('social-preview.png', 'social-preview.png'),
@@ -52,27 +49,7 @@ async function sync() {
   ]);
 
   const builtHtml = await readFile(new URL('index.src.html', buildDir), 'utf8');
-  await mkdir(new URL('app/', rootDir), { recursive: true });
-  await writeFile(new URL('app/index.html', rootDir), builtHtml, 'utf8');
-  await writeFile(
-    new URL('index.html', rootDir),
-    `<!doctype html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="0; url=/app" />
-    <link rel="canonical" href="https://cash-guardian.pages.dev/app" />
-    <meta name="robots" content="noindex" />
-    <title>CASH GUARDIAN</title>
-    <script>
-      window.location.replace('/app');
-    </script>
-  </head>
-  <body></body>
-</html>
-`,
-    'utf8',
-  );
+  await writeFile(new URL('index.html', rootDir), builtHtml, 'utf8');
 
   if (!(await pathExists(new URL('icons', rootDir)))) {
     await mkdir(new URL('icons', rootDir), { recursive: true });
