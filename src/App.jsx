@@ -1,5 +1,5 @@
 import { AlertBanner } from './components/AlertBanner';
-import { CommentBoard } from './components/CommentBoard';
+import { FeedbackBoard } from './components/FeedbackBoard';
 import { FinanceCard } from './components/FinanceCard';
 import { SpendingForm } from './components/SpendingForm';
 import { TransactionList } from './components/TransactionList';
@@ -44,7 +44,9 @@ export default function App() {
                   eyebrow="월급"
                   title="이번 달 기준선"
                   value={formatCurrency(summary.salary)}
-                  subValue="월급 대비 결제 수단별 사용량을 실시간으로 비교합니다."
+                  subValue={
+                    data.salaryMemo || '월급 대비 결제 수단별 사용량을 실시간으로 비교합니다.'
+                  }
                   tone="accent"
                 />
                 <FinanceCard
@@ -120,16 +122,17 @@ export default function App() {
               </section>
 
               <TransactionList transactions={data.transactions.slice(0, 6)} />
-              <CommentBoard
-                comments={data.comments || []}
-                onAddComment={actions.addComment}
-                onRemoveComment={actions.removeComment}
+              <FeedbackBoard
+                feedbacks={data.feedbacks || []}
+                onAddFeedback={actions.addFeedback}
+                onRemoveFeedback={actions.removeFeedback}
               />
             </section>
 
             <aside className="grid gap-5 self-start lg:sticky lg:top-6">
               <SpendingForm
                 defaultSalary={data.salary}
+                defaultSalaryMemo={data.salaryMemo || ''}
                 onAddTransaction={actions.addTransaction}
                 onSetSalary={actions.setSalary}
               />

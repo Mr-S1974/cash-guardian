@@ -52,10 +52,15 @@ export function useLocalFinanceData() {
   };
 
   const setSalary = async (salary) => {
-    const normalizedSalary = Number(salary) || 0;
+    const normalizedSalary =
+      typeof salary === 'object' ? Number(salary.salary) || 0 : Number(salary) || 0;
+    const salaryMemo =
+      typeof salary === 'object' ? salary.memo?.trim() || '' : dataRef.current.salaryMemo || '';
+
     await persist({
       ...dataRef.current,
       salary: normalizedSalary,
+      salaryMemo,
       monthlyBudgetMonth: formatMonth(new Date()),
     });
   };
@@ -72,6 +77,9 @@ export function useLocalFinanceData() {
             ? 'cash'
             : 'credit',
       amount: parseNumericInput(transaction.amount),
+      memo: transaction.memo?.trim() || '',
+      receiptImage: transaction.receiptImage || '',
+      receiptName: transaction.receiptName || '',
       spentAt: transaction.spentAt || new Date().toISOString(),
     };
 
@@ -97,28 +105,31 @@ export function useLocalFinanceData() {
     });
   };
 
-  const addComment = async (comment) => {
-    const nextComment = {
+  const addFeedback = async (feedback) => {
+    const nextFeedback = {
       id: crypto.randomUUID(),
-      author: comment.author?.trim() || '익명',
-      text: comment.text?.trim() || '',
+      author: feedback.author?.trim() || '익명',
+      department: feedback.department?.trim() || '미분류',
+      text: feedback.text?.trim() || '',
       createdAt: new Date().toISOString(),
     };
 
-    if (!nextComment.text) {
+    if (!nextFeedback.text) {
       return;
     }
 
     await persist({
       ...dataRef.current,
-      comments: [nextComment, ...(dataRef.current.comments || [])],
+      feedbacks: [nextFeedback, ...(dataRef.current.feedbacks || [])],
     });
   };
 
-  const removeComment = async (commentId) => {
+  const removeFeedback = async (feedbackId) => {
     await persist({
       ...dataRef.current,
-      comments: (dataRef.current.comments || []).filter((comment) => comment.id !== commentId),
+      feedbacks: (dataRef.current.feedbacks || []).filter(
+        (feedback) => feedback.id !== feedbackId,
+      ),
     });
   };
 
@@ -204,8 +215,8 @@ export function useLocalFinanceData() {
       addTransaction,
       removeTransaction,
       resetDemoData,
-      addComment,
-      removeComment,
+      addFeedback,
+      removeFeedback,
       addWatchlist,
       removeWatchlist,
     },

@@ -5,6 +5,7 @@ const PRIMARY_KEY = 'singleton';
 
 export const defaultFinanceData = {
   salary: 3200000,
+  salaryMemo: '세후 기준 월급과 정기 수당 포함',
   monthlyBudgetMonth: new Date().toISOString().slice(0, 7),
   transactions: [
     {
@@ -13,6 +14,9 @@ export const defaultFinanceData = {
       merchant: '점심 정기결제',
       amount: 280000,
       category: '식비',
+      memo: '팀 점심 결제',
+      receiptImage: '',
+      receiptName: '',
       spentAt: new Date().toISOString(),
     },
     {
@@ -21,6 +25,9 @@ export const defaultFinanceData = {
       merchant: '주말 쇼핑',
       amount: 620000,
       category: '쇼핑',
+      memo: '생활용품과 의류 구매',
+      receiptImage: '',
+      receiptName: '',
       spentAt: new Date().toISOString(),
     },
     {
@@ -29,6 +36,9 @@ export const defaultFinanceData = {
       merchant: '편의점',
       amount: 84000,
       category: '생활',
+      memo: '생수와 간편식 구입',
+      receiptImage: '',
+      receiptName: '',
       spentAt: new Date().toISOString(),
     },
     {
@@ -37,6 +47,9 @@ export const defaultFinanceData = {
       merchant: '카페 현금 결제',
       amount: 38000,
       category: '간식',
+      memo: '현장 결제',
+      receiptImage: '',
+      receiptName: '',
       spentAt: new Date().toISOString(),
     },
   ],
@@ -51,11 +64,12 @@ export const defaultFinanceData = {
       label: '현금',
     },
   },
-  comments: [
+  feedbacks: [
     {
-      id: 'seed-comment-1',
-      author: '운영 메모',
-      text: '월급 저장 후 상단 카드와 최근 소비 흐름을 먼저 확인하세요.',
+      id: 'seed-feedback-1',
+      author: '매장 운영팀',
+      department: '강남점',
+      text: '영수증 촬영 후 금액 자동 인식 기능이 다음 단계에서 필요합니다.',
       createdAt: new Date().toISOString(),
     },
   ],
@@ -107,10 +121,31 @@ export async function getFinanceSnapshot() {
   const snapshot = await withStore('readonly', (store) => store.get(PRIMARY_KEY));
 
   if (snapshot?.payload) {
+    const transactions = (snapshot.payload.transactions || defaultFinanceData.transactions).map(
+      (transaction) => ({
+        memo: '',
+        receiptImage: '',
+        receiptName: '',
+        ...transaction,
+      }),
+    );
+    const feedbacks =
+      snapshot.payload.feedbacks ||
+      snapshot.payload.comments?.map((comment) => ({
+        id: comment.id,
+        author: comment.author || '익명',
+        department: '미분류',
+        text: comment.text || '',
+        createdAt: comment.createdAt || new Date().toISOString(),
+      })) ||
+      defaultFinanceData.feedbacks;
+
     return {
       ...defaultFinanceData,
       ...snapshot.payload,
-      comments: snapshot.payload.comments || defaultFinanceData.comments,
+      transactions,
+      salaryMemo: snapshot.payload.salaryMemo || defaultFinanceData.salaryMemo,
+      feedbacks,
       watchlist: snapshot.payload.watchlist || defaultFinanceData.watchlist,
     };
   }
