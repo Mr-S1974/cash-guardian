@@ -51,6 +51,22 @@ export const defaultFinanceData = {
       label: '현금',
     },
   },
+  comments: [
+    {
+      id: 'seed-comment-1',
+      author: '운영 메모',
+      text: '월급 저장 후 상단 카드와 최근 소비 흐름을 먼저 확인하세요.',
+      createdAt: new Date().toISOString(),
+    },
+  ],
+  watchlist: [
+    {
+      id: 'seed-watch-aapl',
+      query: 'AAPL',
+      label: 'Apple',
+      createdAt: new Date().toISOString(),
+    },
+  ],
   updatedAt: new Date().toISOString(),
 };
 
@@ -91,7 +107,12 @@ export async function getFinanceSnapshot() {
   const snapshot = await withStore('readonly', (store) => store.get(PRIMARY_KEY));
 
   if (snapshot?.payload) {
-    return snapshot.payload;
+    return {
+      ...defaultFinanceData,
+      ...snapshot.payload,
+      comments: snapshot.payload.comments || defaultFinanceData.comments,
+      watchlist: snapshot.payload.watchlist || defaultFinanceData.watchlist,
+    };
   }
 
   await saveFinanceSnapshot(defaultFinanceData);

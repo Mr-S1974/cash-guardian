@@ -1,7 +1,9 @@
 import { AlertBanner } from './components/AlertBanner';
+import { CommentBoard } from './components/CommentBoard';
 import { FinanceCard } from './components/FinanceCard';
 import { SpendingForm } from './components/SpendingForm';
 import { TransactionList } from './components/TransactionList';
+import { WatchlistPanel } from './components/WatchlistPanel';
 import { useLocalFinanceData } from './hooks/useLocalFinanceData';
 import { formatCurrency, formatPercent } from './lib/format';
 
@@ -37,7 +39,7 @@ export default function App() {
         ) : (
           <main className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr] lg:gap-6">
             <section className="grid gap-5">
-              <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <section className="grid gap-4 md:grid-cols-2">
                 <FinanceCard
                   eyebrow="월급"
                   title="이번 달 기준선"
@@ -118,6 +120,11 @@ export default function App() {
               </section>
 
               <TransactionList transactions={data.transactions.slice(0, 6)} />
+              <CommentBoard
+                comments={data.comments || []}
+                onAddComment={actions.addComment}
+                onRemoveComment={actions.removeComment}
+              />
             </section>
 
             <aside className="grid gap-5 self-start lg:sticky lg:top-6">
@@ -137,6 +144,12 @@ export default function App() {
                   빠르게 쓰고, 민감한 소비 정보는 내 기기 안에서만 관리하는 흐름입니다.
                 </p>
               </section>
+
+              <WatchlistPanel
+                watchlist={data.watchlist || []}
+                onAddWatchlist={actions.addWatchlist}
+                onRemoveWatchlist={actions.removeWatchlist}
+              />
 
               <button
                 className="rounded-2xl border border-slate-200 bg-transparent px-4 py-4 text-sm font-semibold text-slate-500"

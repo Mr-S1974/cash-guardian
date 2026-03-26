@@ -4,6 +4,7 @@ import {
   getFinanceSnapshot,
   saveFinanceSnapshot,
 } from '../lib/localFinanceDb';
+import { parseNumericInput } from '../lib/format';
 
 function formatMonth(date) {
   return date.toISOString().slice(0, 7);
@@ -70,7 +71,7 @@ export function useLocalFinanceData() {
           : transaction.type === 'cash'
             ? 'cash'
             : 'credit',
-      amount: Number(transaction.amount) || 0,
+      amount: parseNumericInput(transaction.amount),
       spentAt: transaction.spentAt || new Date().toISOString(),
     };
 
@@ -93,6 +94,66 @@ export function useLocalFinanceData() {
     await persist({
       ...defaultFinanceData,
       monthlyBudgetMonth: formatMonth(new Date()),
+    });
+  };
+
+  const addComment = async (comment) => {
+    const nextComment = {
+      id: crypto.randomUUID(),
+      author: comment.author?.trim() || '익명',
+      text: comment.text?.trim() || '',
+      createdAt: new Date().toISOString(),
+    };
+
+    if (!nextComment.text) {
+      return;
+    }
+
+    await persist({
+      ...dataRef.current,
+      comments: [nextComment, ...(dataRef.current.comments || [])],
+    });
+  };
+
+  const removeComment = async (commentId) => {
+    await persist({
+      ...dataRef.current,
+      comments: (dataRef.current.comments || []).filter((comment) => comment.id !== commentId),
+    });
+  };
+
+  const addWatchlist = async (query) => {
+    const normalizedQuery = query.trim();
+
+    if (!normalizedQuery) {
+      return;
+    }
+
+    const alreadyExists = (dataRef.current.watchlist || []).some(
+      (item) => item.query.toLowerCase() === normalizedQuery.toLowerCase(),
+    );
+
+    if (alreadyExists) {
+      return;
+    }
+
+    const nextItem = {
+      id: crypto.randomUUID(),
+      query: normalizedQuery,
+      label: normalizedQuery.toUpperCase(),
+      createdAt: new Date().toISOString(),
+    };
+
+    await persist({
+      ...dataRef.current,
+      watchlist: [nextItem, ...(dataRef.current.watchlist || [])],
+    });
+  };
+
+  const removeWatchlist = async (watchlistId) => {
+    await persist({
+      ...dataRef.current,
+      watchlist: (dataRef.current.watchlist || []).filter((item) => item.id !== watchlistId),
     });
   };
 
@@ -143,6 +204,10 @@ export function useLocalFinanceData() {
       addTransaction,
       removeTransaction,
       resetDemoData,
+      addComment,
+      removeComment,
+      addWatchlist,
+      removeWatchlist,
     },
   };
 }

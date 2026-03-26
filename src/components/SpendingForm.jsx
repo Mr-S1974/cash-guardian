@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { formatCurrency } from '../lib/format';
+import {
+  formatCurrency,
+  formatNumericInput,
+  parseNumericInput,
+} from '../lib/format';
 
 const initialForm = {
   type: 'credit',
@@ -24,7 +28,7 @@ export function SpendingForm({ onAddTransaction, onSetSalary, defaultSalary }) {
 
   const handleSalarySubmit = async (event) => {
     event.preventDefault();
-    await onSetSalary(salaryInput);
+    await onSetSalary(parseNumericInput(salaryInput));
   };
 
   return (
@@ -50,13 +54,13 @@ export function SpendingForm({ onAddTransaction, onSetSalary, defaultSalary }) {
           <input
             className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-lg font-semibold text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
             inputMode="numeric"
-            value={salaryInput}
+            value={formatNumericInput(salaryInput)}
             onChange={(event) => setSalaryInput(event.target.value)}
             placeholder="3200000"
           />
         </label>
         <p className="mt-3 text-sm text-slate-500">
-          현재 기준선 {formatCurrency(Number(salaryInput) || 0)}
+          현재 기준선 {formatCurrency(parseNumericInput(salaryInput))}
         </p>
 
         <button
@@ -123,7 +127,7 @@ export function SpendingForm({ onAddTransaction, onSetSalary, defaultSalary }) {
           <input
             className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
             inputMode="numeric"
-            value={form.amount}
+            value={formatNumericInput(form.amount)}
             onChange={(event) =>
               setForm((current) => ({ ...current, amount: event.target.value }))
             }
