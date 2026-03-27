@@ -1,50 +1,43 @@
 const ACTIONS = [
   {
-    id: 'income-section',
+    id: 'income',
     eyebrow: '1',
     title: '수입 정리',
     description: '이번 달 월급과 부수입부터 먼저 정리합니다.',
   },
   {
-    id: 'spending-section',
+    id: 'spending',
     eyebrow: '2',
     title: '지출 기록',
     description: '카드와 현금 지출을 빠르게 추가합니다.',
   },
   {
-    id: 'history-section',
+    id: 'history',
     eyebrow: '3',
     title: '소비 확인',
-    description: '최근 기록과 월간 가이드라인을 점검합니다.',
+    description: '최근 기록과 현재 소비 흐름을 점검합니다.',
   },
   {
-    id: 'watchlist-section',
+    id: 'watchlist',
     eyebrow: '4',
     title: '관심종목 보기',
     description: '등록한 종목 시세와 뉴스를 확인합니다.',
   },
   {
-    id: 'settings-section',
+    id: 'settings',
     eyebrow: '5',
-    title: '설정 관리',
-    description: '로컬 저장소와 초기화 같은 환경을 정리합니다.',
+    title: '설정 정리',
+    description: '저장소, 데이터 관리, 소비 가이드라인을 한곳에서 정리합니다.',
   },
   {
-    id: 'contact-section',
+    id: 'contact',
     eyebrow: '6',
     title: '문의 남기기',
-    description: '맨 아래 Contact Us에서 운영팀에 의견을 보냅니다.',
+    description: '운영팀에 의견이나 문제를 바로 전달합니다.',
   },
 ];
 
-export function HomeActionPanel() {
-  const handleMove = (sectionId) => {
-    document.getElementById(sectionId)?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
-  };
-
+export function HomeActionPanel({ onSelect }) {
   return (
     <section className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-card lg:p-6">
       <div className="flex items-center justify-between gap-3">
@@ -64,7 +57,7 @@ export function HomeActionPanel() {
           <button
             className="rounded-[24px] border border-slate-200 bg-slate-50 p-4 text-left transition hover:border-teal-300 hover:bg-teal-50"
             key={action.id}
-            onClick={() => handleMove(action.id)}
+            onClick={() => onSelect(action.id)}
             type="button"
           >
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-700">
