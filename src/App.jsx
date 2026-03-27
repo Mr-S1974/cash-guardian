@@ -1,16 +1,14 @@
 import { FeedbackBoard } from './components/FeedbackBoard';
 import { FinanceCard } from './components/FinanceCard';
 import { MonthlyGuidelinePanel } from './components/MonthlyGuidelinePanel';
+import { SettingsPanel } from './components/SettingsPanel';
 import { SpendingForm } from './components/SpendingForm';
-import { StorageSelector } from './components/StorageSelector';
 import { TransactionList } from './components/TransactionList';
 import { WatchlistPanel } from './components/WatchlistPanel';
-import { useState } from 'react';
 import { useLocalFinanceData } from './hooks/useLocalFinanceData';
 import { formatCurrency, formatPercent } from './lib/format';
 
 export default function App() {
-  const [storageTarget, setStorageTarget] = useState('local');
   const { data, summary, status, actions } = useLocalFinanceData();
   const contactEndpoint =
     import.meta.env.VITE_CONTACT_ENDPOINT || (import.meta.env.PROD ? '/api/contact' : '');
@@ -33,8 +31,8 @@ export default function App() {
               </h1>
             </div>
             <p className="mt-4 max-w-md text-sm leading-7 text-slate-600 lg:mt-0 lg:text-base">
-              데이터는 서버로 전송되지 않고 이 기기의 로컬 저장소에만 저장됩니다. 웹에서도 넓은
-              화면에 맞춰 월급, 신용카드, 체크카드, 현금 흐름을 바로 읽을 수 있게 구성했습니다.
+              데이터는 서버로 전송되지 않고 이 기기의 로컬 저장소에만 저장됩니다. 모바일에서는 위에서
+              아래로 수입 확인, 지출 입력, 기록 점검, 설정 정리까지 자연스럽게 이어지도록 구성했습니다.
             </p>
           </div>
         </header>
@@ -45,9 +43,8 @@ export default function App() {
           </div>
         ) : (
           <>
-            <main className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr] lg:gap-6">
-              <section className="grid gap-5">
-              <section className="grid gap-4 md:grid-cols-2">
+            <main className="grid gap-5">
+              <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <FinanceCard
                   eyebrow="총수입"
                   title="이번 달 기준"
@@ -56,18 +53,18 @@ export default function App() {
                   tone="accent"
                 />
                 <FinanceCard
-                  eyebrow="카드 합계"
+                  eyebrow="총지출"
+                  title="현재 사용"
+                  value={formatCurrency(summary.totalSpent)}
+                  subValue={`수입 대비 ${formatPercent(summary.totalUsageRate)}`}
+                  tone="mint"
+                />
+                <FinanceCard
+                  eyebrow="카드"
                   title="현재 사용"
                   value={formatCurrency(summary.cardSpent)}
                   subValue={`수입 대비 ${formatPercent(summary.cardUsageRate)}`}
                   tone="light"
-                />
-                <FinanceCard
-                  eyebrow="신용카드"
-                  title="현재 사용"
-                  value={formatCurrency(summary.creditSpent)}
-                  subValue={`총 사용 ${formatCurrency(summary.totalSpent)}`}
-                  tone="mint"
                 />
                 <FinanceCard
                   eyebrow="현금"
@@ -78,49 +75,29 @@ export default function App() {
                 />
               </section>
 
-              <MonthlyGuidelinePanel
-                guidelines={data.monthlyGuidelines || {}}
-                onSetGuidelines={actions.setMonthlyGuidelines}
-                summary={summary}
-              />
-
-              <TransactionList transactions={data.transactions.slice(0, 6)} />
+              <section className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+                <SpendingForm
+                  incomeSources={data.incomeSources || []}
+                  onAddTransaction={actions.addTransaction}
+                  onSetIncomeSources={actions.setIncomeSources}
+                />
+                <div className="grid gap-5">
+                  <TransactionList transactions={data.transactions.slice(0, 6)} />
+                  <MonthlyGuidelinePanel
+                    guidelines={data.monthlyGuidelines || {}}
+                    onSetGuidelines={actions.setMonthlyGuidelines}
+                    summary={summary}
+                  />
+                </div>
               </section>
 
-              <aside className="grid gap-5 self-start lg:sticky lg:top-6">
-                <StorageSelector value={storageTarget} onChange={setStorageTarget} />
+              <WatchlistPanel
+                watchlist={data.watchlist || []}
+                onAddWatchlist={actions.addWatchlist}
+                onRemoveWatchlist={actions.removeWatchlist}
+              />
 
-                  <SpendingForm
-                    incomeSources={data.incomeSources || []}
-                    onAddTransaction={actions.addTransaction}
-                    onSetIncomeSources={actions.setIncomeSources}
-                  />
-
-                  <WatchlistPanel
-                    watchlist={data.watchlist || []}
-                    onAddWatchlist={actions.addWatchlist}
-                    onRemoveWatchlist={actions.removeWatchlist}
-                  />
-
-                <section className="rounded-[28px] bg-slate-950 p-5 text-white shadow-card lg:p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
-                  Storage
-                </p>
-                <h2 className="mt-2 text-2xl font-bold">CASH GUARDIAN</h2>
-                <p className="mt-4 text-sm leading-7 text-white/75">
-                  현재 작업 대상은 내 기기 로컬 저장소입니다. 월간 수입, 지출, 메모, 영수증은 이
-                  브라우저 안에만 저장됩니다. Contact Us는 하단에서 별도로 관리됩니다.
-                </p>
-                </section>
-
-                <button
-                  className="rounded-2xl border border-slate-200 bg-transparent px-4 py-4 text-sm font-semibold text-slate-500"
-                  onClick={actions.resetDemoData}
-                  type="button"
-                >
-                  데모 데이터로 초기화
-                </button>
-              </aside>
+              <SettingsPanel onResetDemoData={actions.resetDemoData} />
             </main>
 
             <section className="mt-6">

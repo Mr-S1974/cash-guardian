@@ -1,12 +1,8 @@
 import { formatCurrency } from '../lib/format';
 
 function getTypeLabel(type) {
-  if (type === 'credit') {
-    return '신용카드';
-  }
-
-  if (type === 'debit') {
-    return '체크카드';
+  if (type === 'card') {
+    return '카드';
   }
 
   return '현금';
@@ -47,11 +43,7 @@ export function TransactionList({ transactions }) {
               </div>
               <p
                 className={`shrink-0 text-right text-base font-bold tabular-nums ${
-                  transaction.type === 'credit'
-                    ? 'text-rose-600'
-                    : transaction.type === 'debit'
-                      ? 'text-teal-700'
-                      : 'text-amber-700'
+                  transaction.type === 'card' ? 'text-teal-700' : 'text-amber-700'
                 }`}
               >
                 {formatCurrency(transaction.amount)}

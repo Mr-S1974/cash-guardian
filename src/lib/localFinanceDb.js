@@ -3,6 +3,10 @@ const DB_VERSION = 1;
 const STORE_NAME = 'finance_snapshots';
 const PRIMARY_KEY = 'singleton';
 
+function normalizeTransactionType(type) {
+  return type === 'cash' ? 'cash' : 'card';
+}
+
 export const defaultFinanceData = {
   incomeSources: [
     {
@@ -34,7 +38,7 @@ export const defaultFinanceData = {
   transactions: [
     {
       id: 'seed-credit-1',
-      type: 'credit',
+      type: 'card',
       merchant: '점심 정기결제',
       amount: 280000,
       category: '식비',
@@ -45,7 +49,7 @@ export const defaultFinanceData = {
     },
     {
       id: 'seed-credit-2',
-      type: 'credit',
+      type: 'card',
       merchant: '주말 쇼핑',
       amount: 620000,
       category: '쇼핑',
@@ -56,7 +60,7 @@ export const defaultFinanceData = {
     },
     {
       id: 'seed-debit-1',
-      type: 'debit',
+      type: 'card',
       merchant: '편의점',
       amount: 84000,
       category: '생활',
@@ -78,11 +82,8 @@ export const defaultFinanceData = {
     },
   ],
   cards: {
-    credit: {
-      label: '신용카드',
-    },
-    debit: {
-      label: '체크카드',
+    card: {
+      label: '카드',
     },
     cash: {
       label: '현금',
@@ -173,6 +174,7 @@ export async function getFinanceSnapshot() {
         receiptImage: '',
         receiptName: '',
         ...transaction,
+        type: normalizeTransactionType(transaction.type),
       }),
     );
     const nextSnapshot = {

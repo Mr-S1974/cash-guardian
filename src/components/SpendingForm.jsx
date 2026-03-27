@@ -7,7 +7,7 @@ import {
 import { parseReceiptText } from '../lib/receiptOcr';
 
 const initialForm = {
-  type: 'credit',
+  type: 'card',
   merchant: '',
   amount: '',
   category: '',
@@ -201,28 +201,17 @@ export function SpendingForm({
         </div>
 
         <div className="mt-5 grid gap-3">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <button
               className={`rounded-2xl px-4 py-3 text-sm font-semibold ${
-                form.type === 'credit'
-                  ? 'bg-rose-100 text-rose-700'
-                  : 'bg-slate-100 text-slate-500'
-              }`}
-              type="button"
-              onClick={() => setForm((current) => ({ ...current, type: 'credit' }))}
-            >
-              신용카드
-            </button>
-            <button
-              className={`rounded-2xl px-4 py-3 text-sm font-semibold ${
-                form.type === 'debit'
+                form.type === 'card'
                   ? 'bg-teal-100 text-teal-700'
                   : 'bg-slate-100 text-slate-500'
               }`}
               type="button"
-              onClick={() => setForm((current) => ({ ...current, type: 'debit' }))}
+              onClick={() => setForm((current) => ({ ...current, type: 'card' }))}
             >
-              체크카드
+              카드
             </button>
             <button
               className={`rounded-2xl px-4 py-3 text-sm font-semibold ${
@@ -327,7 +316,7 @@ export function SpendingForm({
           className="mt-4 w-full rounded-2xl bg-teal-600 px-4 py-4 text-base font-semibold text-white"
           type="submit"
         >
-          로컬 저장소에 저장
+          지출 저장
         </button>
       </form>
     </div>

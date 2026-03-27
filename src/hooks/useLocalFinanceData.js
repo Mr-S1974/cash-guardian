@@ -14,6 +14,10 @@ function isCurrentMonth(isoDate) {
   return formatMonth(new Date(isoDate)) === formatMonth(new Date());
 }
 
+function normalizeTransactionType(type) {
+  return type === 'cash' ? 'cash' : 'card';
+}
+
 export function useLocalFinanceData() {
   const [data, setData] = useState(defaultFinanceData);
   const [status, setStatus] = useState('loading');
@@ -77,12 +81,7 @@ export function useLocalFinanceData() {
       id: crypto.randomUUID(),
       merchant: transaction.merchant?.trim() || '직접 입력',
       category: transaction.category?.trim() || '기타',
-      type:
-        transaction.type === 'debit'
-          ? 'debit'
-          : transaction.type === 'cash'
-            ? 'cash'
-            : 'credit',
+      type: normalizeTransactionType(transaction.type),
       amount: parseNumericInput(transaction.amount),
       memo: transaction.memo?.trim() || '',
       receiptImage: transaction.receiptImage || '',
@@ -152,20 +151,15 @@ export function useLocalFinanceData() {
       isCurrentMonth(transaction.spentAt),
     );
 
-    const creditSpent = currentTransactions
-      .filter((transaction) => transaction.type === 'credit')
-      .reduce((sum, transaction) => sum + transaction.amount, 0);
-
-    const debitSpent = currentTransactions
-      .filter((transaction) => transaction.type === 'debit')
+    const cardSpent = currentTransactions
+      .filter((transaction) => normalizeTransactionType(transaction.type) === 'card')
       .reduce((sum, transaction) => sum + transaction.amount, 0);
 
     const cashSpent = currentTransactions
-      .filter((transaction) => transaction.type === 'cash')
+      .filter((transaction) => normalizeTransactionType(transaction.type) === 'cash')
       .reduce((sum, transaction) => sum + transaction.amount, 0);
 
-    const totalSpent = creditSpent + debitSpent + cashSpent;
-    const cardSpent = creditSpent + debitSpent;
+    const totalSpent = cardSpent + cashSpent;
     const totalIncome = (data.incomeSources || []).reduce(
       (sum, incomeSource) => sum + (Number(incomeSource.amount) || 0),
       0,
@@ -176,8 +170,6 @@ export function useLocalFinanceData() {
 
     return {
       totalIncome,
-      creditSpent,
-      debitSpent,
       cardSpent,
       cashSpent,
       totalSpent,
