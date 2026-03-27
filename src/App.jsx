@@ -1,4 +1,3 @@
-import { FeedbackBoard } from './components/FeedbackBoard';
 import { FinanceCard } from './components/FinanceCard';
 import { HomeActionPanel } from './components/HomeActionPanel';
 import { SettingsPanel } from './components/SettingsPanel';
@@ -9,7 +8,7 @@ import { useState } from 'react';
 import { useLocalFinanceData } from './hooks/useLocalFinanceData';
 import { formatCurrency, formatPercent } from './lib/format';
 
-function ScreenShell({ title, description, onBack, children }) {
+function ScreenShell({ title, description, children }) {
   return (
     <section className="grid gap-5">
       <div className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-card lg:p-6">
@@ -45,8 +44,8 @@ export default function App() {
               </h1>
             </div>
             <p className="mt-4 max-w-md text-sm leading-7 text-slate-600 lg:mt-0 lg:text-base">
-              데이터는 서버로 전송되지 않고 이 기기의 로컬 저장소에만 저장됩니다. 모바일에서는 위에서
-              아래로 수입 확인, 지출 입력, 기록 점검, 설정 정리까지 자연스럽게 이어지도록 구성했습니다.
+              데이터는 서버로 전송되지 않고 이 기기의 로컬 저장소에만 저장됩니다. 필요한 관리 화면만
+              골라서 바로 이동할 수 있게 구성했습니다.
             </p>
           </div>
         </header>
@@ -61,14 +60,14 @@ export default function App() {
               <main className="grid gap-5">
                 <section className="grid gap-4 md:grid-cols-2">
                   <FinanceCard
-                    eyebrow="총수입"
+                    eyebrow="수입"
                     title="이번 달"
                     value={formatCurrency(summary.totalIncome)}
                     subValue="월급, 성과급, 기타수입을 합산한 금액입니다."
                     tone="accent"
                   />
                   <FinanceCard
-                    eyebrow="총지출"
+                    eyebrow="지출"
                     title="현재 사용"
                     value={formatCurrency(summary.totalSpent)}
                     subValue={`가이드라인 대비 ${formatPercent(
@@ -85,11 +84,7 @@ export default function App() {
             ) : null}
 
             {activeScreen === 'income' ? (
-              <ScreenShell
-                title="수입 관리"
-                description="이번 달 기준 수입원을 먼저 관리합니다."
-                onBack={() => setActiveScreen('home')}
-              >
+              <ScreenShell title="수입 관리" description="이번 달 기준 수입원을 먼저 관리합니다.">
                 <SpendingForm
                   incomeSources={data.incomeSources || []}
                   onAddTransaction={actions.addTransaction}
@@ -101,10 +96,46 @@ export default function App() {
 
             {activeScreen === 'spending' ? (
               <ScreenShell
-                title="지출 관리"
-                description="카드와 현금 지출을 빠르게 추가합니다."
-                onBack={() => setActiveScreen('home')}
+                title="지출"
+                description="지출관리와 나의 소비 패턴 중 필요한 화면을 선택하세요."
               >
+                <section className="grid gap-3 md:grid-cols-2">
+                  <button
+                    className="rounded-[28px] border border-slate-200 bg-white p-5 text-left shadow-card transition hover:border-teal-300"
+                    onClick={() => setActiveScreen('spending-manage')}
+                    type="button"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-700">
+                      Spend
+                    </p>
+                    <p className="mt-4 text-2xl font-black tracking-[-0.04em] text-slate-950">
+                      지출관리
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-500">
+                      카드와 현금 지출을 기록합니다.
+                    </p>
+                  </button>
+                  <button
+                    className="rounded-[28px] border border-slate-200 bg-white p-5 text-left shadow-card transition hover:border-teal-300"
+                    onClick={() => setActiveScreen('history')}
+                    type="button"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-700">
+                      Pattern
+                    </p>
+                    <p className="mt-4 text-2xl font-black tracking-[-0.04em] text-slate-950">
+                      나의 소비 패턴
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-500">
+                      최근 소비 흐름과 메모를 확인합니다.
+                    </p>
+                  </button>
+                </section>
+              </ScreenShell>
+            ) : null}
+
+            {activeScreen === 'spending-manage' ? (
+              <ScreenShell title="지출 관리" description="카드와 현금 지출을 빠르게 추가합니다.">
                 <SpendingForm
                   incomeSources={data.incomeSources || []}
                   onAddTransaction={actions.addTransaction}
@@ -115,11 +146,7 @@ export default function App() {
             ) : null}
 
             {activeScreen === 'history' ? (
-              <ScreenShell
-                title="나의 소비 패턴"
-                description="최근 소비 기록과 현재 흐름을 점검합니다."
-                onBack={() => setActiveScreen('home')}
-              >
+              <ScreenShell title="나의 소비 패턴" description="최근 소비 기록과 현재 흐름을 점검합니다.">
                 <TransactionList transactions={data.transactions.slice(0, 12)} />
               </ScreenShell>
             ) : null}
@@ -128,7 +155,6 @@ export default function App() {
               <ScreenShell
                 title="관심종목 관리"
                 description="등록한 종목 코드, 시세, 관련 뉴스를 확인합니다."
-                onBack={() => setActiveScreen('home')}
               >
                 <WatchlistPanel
                   watchlist={data.watchlist || []}
@@ -141,28 +167,16 @@ export default function App() {
             {activeScreen === 'settings' ? (
               <ScreenShell
                 title="설정 관리"
-                description="데이터 관리와 소비관리를 한곳에서 관리합니다."
-                onBack={() => setActiveScreen('home')}
+                description="데이터 관리와 소비관리, 문의관리를 한곳에서 관리합니다."
               >
                 <SettingsPanel
+                  contactEmail={contactEmail}
+                  contactEndpoint={contactEndpoint}
+                  deliveryMethod={feedbackDeliveryMethod}
                   guidelines={data.monthlyGuidelines || {}}
                   onResetDemoData={actions.resetSection}
                   onSetGuidelines={actions.setMonthlyGuidelines}
                   summary={summary}
-                />
-              </ScreenShell>
-            ) : null}
-
-            {activeScreen === 'contact' ? (
-              <ScreenShell
-                title="문의 관리"
-                description="운영팀에 의견이나 문제를 전달합니다."
-                onBack={() => setActiveScreen('home')}
-              >
-                <FeedbackBoard
-                  contactEndpoint={contactEndpoint}
-                  deliveryMethod={feedbackDeliveryMethod}
-                  contactEmail={contactEmail}
                 />
               </ScreenShell>
             ) : null}

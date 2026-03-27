@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FeedbackBoard } from './FeedbackBoard';
 import { formatCurrency, formatNumericInput, formatPercent } from '../lib/format';
 
 function ProgressRow({ label, spent, limit, tone = 'teal' }) {
@@ -28,7 +29,15 @@ function ProgressRow({ label, spent, limit, tone = 'teal' }) {
   );
 }
 
-export function SettingsPanel({ onResetDemoData, guidelines, summary, onSetGuidelines }) {
+export function SettingsPanel({
+  onResetDemoData,
+  guidelines,
+  summary,
+  onSetGuidelines,
+  contactEndpoint,
+  deliveryMethod,
+  contactEmail,
+}) {
   const [tab, setTab] = useState('manage');
   const [form, setForm] = useState(guidelines);
 
@@ -52,11 +61,11 @@ export function SettingsPanel({ onResetDemoData, guidelines, summary, onSetGuide
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Settings</p>
         <h2 className="mt-2 text-xl font-bold text-slate-950">설정 관리</h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">
-          데이터 관리와 소비관리를 이곳에서 한 번에 정리합니다.
+          데이터 관리와 소비관리, 문의관리를 이곳에서 한 번에 정리합니다.
         </p>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1">
+      <div className="mt-5 grid grid-cols-3 gap-2 rounded-2xl bg-slate-100 p-1">
         <button
           className={`rounded-2xl px-4 py-3 text-sm font-semibold transition ${
             tab === 'manage' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-500'
@@ -74,6 +83,15 @@ export function SettingsPanel({ onResetDemoData, guidelines, summary, onSetGuide
           type="button"
         >
           소비관리
+        </button>
+        <button
+          className={`rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+            tab === 'contact' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-500'
+          }`}
+          onClick={() => setTab('contact')}
+          type="button"
+        >
+          문의관리
         </button>
       </div>
 
@@ -176,6 +194,16 @@ export function SettingsPanel({ onResetDemoData, guidelines, summary, onSetGuide
             <ProgressRow label="카드" limit={summary.guidelineCard} spent={summary.cardSpent} tone="rose" />
             <ProgressRow label="현금" limit={summary.guidelineCash} spent={summary.cashSpent} tone="amber" />
           </div>
+        </div>
+      ) : null}
+
+      {tab === 'contact' ? (
+        <div className="mt-4">
+          <FeedbackBoard
+            contactEmail={contactEmail}
+            contactEndpoint={contactEndpoint}
+            deliveryMethod={deliveryMethod}
+          />
         </div>
       ) : null}
     </section>
