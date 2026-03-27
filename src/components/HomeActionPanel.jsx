@@ -29,30 +29,39 @@ export function HomeActionPanel({ onSelect }) {
   return (
     <section className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-card lg:p-6">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-          Main Menu
+        <p className="text-xs font-black uppercase tracking-[0.24em] text-rose-500">
+          PICK ONE
         </p>
-        <h2 className="mt-2 text-xl font-bold text-slate-950">바로 시작할 관리를 선택하세요</h2>
+        <h2 className="mt-2 text-[1.6rem] font-black tracking-[-0.05em] text-slate-950">
+          지금 당장 손볼 항목만 콕 찍으세요
+        </h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">
-          필요한 관리 화면으로 바로 전환할 수 있습니다.
+          길게 헤매지 않고 바로 관리 화면으로 들어갑니다.
         </p>
       </div>
 
       <div className="mt-5 grid gap-3 md:grid-cols-2">
         {ACTIONS.map((action) => (
           <button
-            className="rounded-[28px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f5fbfa_100%)] p-5 text-left transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-card"
+            className="group rounded-[30px] border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_45%,#edfdf8_100%)] p-5 text-left transition hover:-translate-y-1 hover:border-rose-300 hover:shadow-card"
             key={action.id}
             onClick={() => onSelect(action.id)}
             type="button"
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-700/80">
-              {action.eyebrow}
-            </p>
-            <p className="mt-4 text-[1.45rem] font-black tracking-[-0.04em] text-slate-950">
-              {action.title}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-slate-500">{action.description}</p>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-teal-700/80">
+                  {action.eyebrow}
+                </p>
+                <p className="mt-4 text-[1.55rem] font-black tracking-[-0.05em] text-slate-950">
+                  {action.title}
+                </p>
+              </div>
+              <span className="rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold text-white transition group-hover:bg-rose-500">
+                바로가기
+              </span>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-slate-500">{action.description}</p>
           </button>
         ))}
       </div>

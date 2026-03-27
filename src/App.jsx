@@ -32,21 +32,40 @@ export default function App() {
     <div className="min-h-screen bg-mist text-ink">
       <div className="mx-auto min-h-screen w-full max-w-7xl px-5 pb-12 pt-6 lg:px-8 lg:pb-16 lg:pt-8">
         <header className="pb-6 lg:pb-8">
-          <div className="rounded-[32px] bg-[radial-gradient(circle_at_top_left,_rgba(15,118,110,0.22),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(15,23,42,0.08),_transparent_28%),linear-gradient(180deg,#ffffff_0%,#eef4fb_100%)] p-6 shadow-card lg:grid lg:grid-cols-[1.3fr_0.9fr] lg:items-end lg:gap-8 lg:p-8">
+          <div className="overflow-hidden rounded-[32px] bg-[radial-gradient(circle_at_top_left,_rgba(248,113,113,0.28),_transparent_28%),radial-gradient(circle_at_85%_20%,_rgba(15,118,110,0.26),_transparent_26%),linear-gradient(135deg,#fff6eb_0%,#fff1f2_42%,#eefcf9_100%)] p-6 shadow-card lg:grid lg:grid-cols-[1.3fr_0.9fr] lg:items-end lg:gap-8 lg:p-8">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
+              <p className="inline-flex rounded-full bg-white/80 px-3 py-1 text-xs font-black uppercase tracking-[0.28em] text-rose-600 shadow-sm">
                 CASH GUARDIAN
               </p>
-              <h1 className="mt-3 text-[2.2rem] font-black leading-[0.98] tracking-[-0.04em] text-slate-950 lg:text-[4rem]">
-                한눈에 보는
+              <h1 className="mt-4 text-[2.35rem] font-black leading-[0.92] tracking-[-0.06em] text-slate-950 lg:text-[4.4rem]">
+                숨만 쉬어도
                 <br />
-                소비 방어 대시보드
+                녹는 내 돈,
               </h1>
+              <p className="mt-4 max-w-xl text-lg font-bold tracking-[-0.04em] text-slate-950 lg:text-[1.65rem]">
+                멱살 잡고 지켜내는 팩폭 코치
+              </p>
             </div>
-            <p className="mt-4 max-w-md text-sm leading-7 text-slate-600 lg:mt-0 lg:text-base">
-              데이터는 서버로 전송되지 않고 이 기기의 로컬 저장소에만 저장됩니다. 필요한 관리 화면만
-              골라서 바로 이동할 수 있게 구성했습니다.
-            </p>
+            <div className="mt-5 rounded-[28px] border border-white/70 bg-white/70 p-5 backdrop-blur lg:mt-0">
+              <p className="text-sm font-black uppercase tracking-[0.22em] text-rose-500">
+                No Login. No Tracking.
+              </p>
+              <p className="mt-3 text-sm leading-7 text-slate-700 lg:text-base">
+                귀찮은 인증, 찝찝한 데이터 수집 다 뺐습니다. 오직 이 기기 안에서만 돌아가는 초강력
+                소비 통제 대시보드입니다.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold text-white">
+                  수입 점검
+                </span>
+                <span className="rounded-full bg-teal-700 px-3 py-1 text-xs font-semibold text-white">
+                  지출 제어
+                </span>
+                <span className="rounded-full bg-rose-500 px-3 py-1 text-xs font-semibold text-white">
+                  관심종목 체크
+                </span>
+              </div>
+            </div>
           </div>
         </header>
 
