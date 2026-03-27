@@ -3,7 +3,7 @@ const ACTIONS = [
     id: 'income',
     eyebrow: 'Income',
     title: '수입',
-    description: '월급, 성과급, 기타수입을 관리합니다.',
+    description: '월급, 용돈, 장학금, 기타수입을 관리합니다.',
   },
   {
     id: 'spending',

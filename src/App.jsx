@@ -82,7 +82,7 @@ export default function App() {
                     eyebrow="수입"
                     title="이번 달"
                     value={formatCurrency(summary.totalIncome)}
-                    subValue="월급, 성과급, 기타수입을 합산한 금액입니다."
+                    subValue="월급 또는 용돈, 장학금, 기타수입을 합산한 금액입니다."
                     tone="accent"
                   />
                   <FinanceCard
@@ -103,7 +103,10 @@ export default function App() {
             ) : null}
 
             {activeScreen === 'income' ? (
-              <ScreenShell title="수입 관리" description="이번 달 기준 수입원을 먼저 관리합니다.">
+              <ScreenShell
+                title="수입 관리"
+                description="월급, 용돈, 장학금, 알바비처럼 이번 달 수입을 먼저 정리합니다."
+              >
                 <SpendingForm
                   incomeSources={data.incomeSources || []}
                   onAddTransaction={actions.addTransaction}

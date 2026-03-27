@@ -11,21 +11,21 @@ export const defaultFinanceData = {
   incomeSources: [
     {
       id: 'income-salary',
-      label: '월급',
+      label: '월급 또는 용돈',
       amount: 3200000,
-      memo: '세후 기준 월급',
+      memo: '매달 들어오는 기본 수입',
     },
     {
       id: 'income-bonus',
-      label: '성과급',
+      label: '성과급 또는 장학금',
       amount: 250000,
-      memo: '분기 인센티브 안분',
+      memo: '보너스, 장학금, 포상금',
     },
     {
       id: 'income-side',
       label: '기타수입',
       amount: 120000,
-      memo: '소규모 외주/판매',
+      memo: '알바, 중고판매, 소규모 외주',
     },
   ],
   monthlyGuidelines: {
@@ -135,18 +135,18 @@ function withStore(mode, handler) {
 
 function getDefaultIncomeSourcesFromLegacyPayload(payload) {
   const legacyAmount = Number(payload.salary) || 0;
-  const legacyMemo = payload.salaryMemo || '세후 기준 월급';
+  const legacyMemo = payload.salaryMemo || '매달 들어오는 기본 수입';
 
   return [
     {
       id: 'income-salary',
-      label: '월급',
+      label: '월급 또는 용돈',
       amount: legacyAmount,
       memo: legacyMemo,
     },
     {
       id: 'income-bonus',
-      label: '성과급',
+      label: '성과급 또는 장학금',
       amount: 0,
       memo: '',
     },

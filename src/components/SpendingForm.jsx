@@ -64,7 +64,7 @@ export function SpendingForm({
               </p>
               <h2 className="mt-2 text-xl font-bold text-slate-950">수입 관리</h2>
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                이번 달 기준 수입원을 먼저 관리한 뒤 지출 판단 기준을 맞춥니다.
+                월급, 용돈, 장학금, 알바비처럼 이번 달 들어오는 돈을 먼저 정리합니다.
               </p>
             </div>
           </div>
@@ -93,7 +93,7 @@ export function SpendingForm({
                   }
                   placeholder={
                     incomeSource.id === 'income-salary'
-                      ? '월급 금액 (실수령액)'
+                      ? '월급 또는 용돈 금액'
                       : `${incomeSource.label} 금액`
                   }
                 />
@@ -113,7 +113,7 @@ export function SpendingForm({
             ))}
           </div>
           <p className="mt-4 text-sm text-slate-500">
-            현재 총수입{' '}
+            현재 수입 합계{' '}
             {formatCurrency(
               incomeForm.reduce((sum, incomeSource) => sum + parseNumericInput(incomeSource.amount), 0),
             )}
