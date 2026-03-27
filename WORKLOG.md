@@ -2,79 +2,78 @@
 
 ## Current status
 
-- Bottom `Contact Us` was simplified to a single-message input.
-- The duplicate `Contact Us` option inside storage selection was removed.
-- `Contact Us` now sends through `Cloudflare Pages Function -> Telegram Bot API`.
-- `Contact Us` inquiries are no longer stored in local browser finance data.
-- Inquiry threads now live in server storage and replies are expected from Telegram webhook events.
-- Operators answer by replying in Telegram to the original bot message for that inquiry.
-- Frontend `Contact Us` now polls `/api/contact` and renders server-backed threads only.
-- Telegram replies are matched by replying to the bot's original message, not by ticket text search.
-- Static asset cache busting was added so new deployments do not keep serving stale `app.js` and `app.css`.
+- Mobile-first flow was rebuilt around a home screen plus screen-to-screen navigation.
+- Home now keeps only four entry points:
+  - `수입`
+  - `지출`
+  - `관심종목`
+  - `설정관리`
+- `지출` is now a split entry that leads to:
+  - `지출 관리`
+  - `나의 소비 패턴`
+- `문의관리` moved inside `설정 관리`.
+- Home copy and visual tone were pushed toward a short-form, high-contrast style.
+- Income and spending wording was broadened so students and early-career users can both understand it.
+- Receipt OCR and receipt upload flow were removed to keep the app focused on a clean MVP.
+- `Contact Us` now stores only on the server and routes through Telegram-backed threads.
+- Google AdSense verification assets were added and deployment paths were fixed.
+
+## Latest verified state
+
+- `npm run build` passes.
+- Production homepage contains:
+  - `google-adsense-account` meta tag
+  - AdSense script for `ca-pub-4269966166949156`
+- Root `ads.txt` is generated in the deployable output.
+- Latest pushed commit:
+  - `b77a6d9` `Fix AdSense verification deployment paths`
 
 ## Key files
 
-- `src/components/FeedbackBoard.jsx`
-- `src/components/StorageSelector.jsx`
 - `src/App.jsx`
-- `functions/api/_contactStore.js`
-- `functions/api/telegram-webhook.js`
-- `src/hooks/useLocalFinanceData.js`
+- `src/components/HomeActionPanel.jsx`
+- `src/components/FinanceCard.jsx`
+- `src/components/SpendingForm.jsx`
+- `src/components/TransactionList.jsx`
+- `src/components/SettingsPanel.jsx`
+- `src/components/FeedbackBoard.jsx`
 - `src/lib/localFinanceDb.js`
+- `src/hooks/useLocalFinanceData.js`
 - `functions/api/contact.js`
-- `.env.example`
+- `functions/api/telegram-webhook.js`
+- `index.src.html`
+- `index.html`
+- `ads.txt`
+- `public/ads.txt`
 - `scripts/sync-static-deploy.mjs`
-- `service-worker.js`
-- `README.md`
 
-## Deployment notes
+## Recent product decisions
 
-- Cloudflare Pages secrets required:
-  - `TELEGRAM_BOT_TOKEN`
-  - `TELEGRAM_CHAT_ID`
-  - `TELEGRAM_WEBHOOK_SECRET`
-- Cloudflare KV binding required:
-  - `CONTACT_THREADS`
-- Current Telegram chat id in use:
-  - `1491475294`
-- Telegram webhook endpoint expected:
-  - `/api/telegram-webhook`
-- Local `.env` is not committed and must stay private.
+- Use one unified `카드` concept instead of splitting debit and credit.
+- Keep storage local for finance data, but keep inquiry threads server-backed only.
+- Favor plain language over finance-heavy wording.
+- Keep the first screen visually bold and operationally simple.
+- Delay deeper market/news backend work until the core MVP feels stable.
 
-## Verified result
+## Next tasks
 
-- `npm run build` passes after Contact Us API changes.
-- Contact Us UI now expects Telegram webhook replies instead of local reply entry.
-- Local finance storage no longer persists `Contact Us` entries.
+- Check whether `https://cash-guardian.pages.dev/ads.txt` is visible from the live site and complete AdSense review if needed.
+- Improve `관심종목` reliability:
+  - confirm why quote/news data sometimes does not render
+  - consider moving market/news fetches behind a server proxy
+- Tighten the home screen further if needed:
+  - add a one-line status signal such as monthly risk level
+  - reduce copy if users hesitate on first action
+- Review mobile spacing and tap targets on real devices.
+- Revisit service worker and cache behavior only after UI structure is stable.
+- Add a small production verification checklist for:
+  - Contact Us submission
+  - Telegram reply reflection
+  - AdSense verification assets
 
-## Remaining setup
+## Suggested restart prompts
 
-- Create or bind Cloudflare KV namespace as `CONTACT_THREADS`.
-- Set `TELEGRAM_WEBHOOK_SECRET` in Cloudflare Pages.
-- Register the Telegram bot webhook to the deployed `/api/telegram-webhook` URL.
-- Verify that replying to the bot's original Telegram message creates a reply under the same thread in the app.
-
-## Added helpers after handoff
-
-- Added `npm run contact:check` to validate required local variables for Contact Us and Telegram setup.
-- Added `npm run telegram:webhook:set` to register the deployed `/api/telegram-webhook` with Telegram.
-- Added `CLOUDFLARE_PAGES_URL` and `CONTACT_THREADS_KV_BINDING` examples to `.env.example`.
-- Expanded `README.md` with a concrete production completion checklist.
-
-## Relevant commits
-
-- `7cad194` `Simplify contact form and add Telegram delivery`
-- `1e3006d` `Bust cached app assets on static deploy`
-
-## Good restart prompts
-
-- `지난번 Contact Us 서버 저장 + Telegram webhook 연동 작업 이어서 하자`
 - `WORKLOG.md 기준으로 다음 작업 이어서 하자`
-- `Contact Us를 로컬 저장 없이 Telegram 양방향 문의함으로 마무리하자`
-
-## Possible next tasks
-
-- Improve Telegram message formatting
-- Add retry UX for failed delivery
-- Register and verify Telegram webhook in production
-- Clean up service worker and caching strategy further
+- `관심종목 데이터가 왜 비는지 먼저 점검하자`
+- `애드센스 검토 상태 확인 후 남은 작업 이어가자`
+- `모바일 홈 화면을 조금 더 줄이고 CTA를 더 세게 만들자`
