@@ -33,6 +33,7 @@ async function copyIfExists(fromRelativePath, toRelativePath) {
 async function sync() {
   await Promise.all([
     removeIfExists('app-assets'),
+    removeIfExists('ads.txt'),
     removeIfExists('icons'),
     removeIfExists('manifest.webmanifest'),
     removeIfExists('service-worker.js'),
@@ -43,6 +44,7 @@ async function sync() {
 
   await Promise.all([
     copyIfExists('app-assets', 'app-assets'),
+    copyIfExists('ads.txt', 'ads.txt'),
     copyIfExists('icons', 'icons'),
     copyIfExists('manifest.webmanifest', 'manifest.webmanifest'),
     copyIfExists('service-worker.js', 'service-worker.js'),
