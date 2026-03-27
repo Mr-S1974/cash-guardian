@@ -82,14 +82,14 @@ export default function App() {
                     eyebrow="수입"
                     title="이번 달"
                     value={formatCurrency(summary.totalIncome)}
-                    subValue="월급 또는 용돈, 장학금, 기타수입을 합산한 금액입니다."
+                    subValue="이번 달 들어온 돈을 한 번에 보여줍니다."
                     tone="accent"
                   />
                   <FinanceCard
                     eyebrow="지출"
                     title="현재 사용"
                     value={formatCurrency(summary.totalSpent)}
-                    subValue={`가이드라인 대비 ${formatPercent(
+                    subValue={`쓸 돈 기준 대비 ${formatPercent(
                       summary.guidelineTotal > 0
                         ? summary.totalSpent / summary.guidelineTotal
                         : summary.totalUsageRate,
@@ -159,7 +159,7 @@ export default function App() {
             {activeScreen === 'spending-manage' ? (
               <ScreenShell
                 title="지출 관리"
-                description="생활비, 식비, 쇼핑처럼 오늘 쓴 돈을 빠르게 추가합니다."
+                description="밥값, 교통비, 쇼핑처럼 오늘 쓴 돈을 빠르게 추가합니다."
               >
                 <SpendingForm
                   incomeSources={data.incomeSources || []}

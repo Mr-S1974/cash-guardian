@@ -14,7 +14,7 @@ const initialForm = {
   spentAt: '',
 };
 
-const COMMON_CATEGORIES = ['식비', '교통', '생활', '쇼핑', '구독', '의료', '교육', '취미'];
+const COMMON_CATEGORIES = ['식비', '교통', '생필품', '쇼핑', '카페·간식', '의료', '교육', '취미'];
 
 export function SpendingForm({
   onAddTransaction,
@@ -140,7 +140,7 @@ export function SpendingForm({
             </p>
             <h2 className="mt-2 text-xl font-bold text-slate-950">지출 관리</h2>
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              생활비, 군것질, 쇼핑처럼 오늘 쓴 돈을 빠르게 기록합니다.
+              밥값, 교통비, 쇼핑처럼 오늘 쓴 돈을 빠르게 기록합니다.
             </p>
           </div>
 
