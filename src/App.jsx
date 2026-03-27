@@ -13,13 +13,6 @@ function ScreenShell({ title, description, onBack, children }) {
   return (
     <section className="grid gap-5">
       <div className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-card lg:p-6">
-        <button
-          className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600"
-          onClick={onBack}
-          type="button"
-        >
-          메인으로 돌아가기
-        </button>
         <h2 className="mt-4 text-2xl font-bold text-slate-950">{title}</h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">{description}</p>
       </div>
@@ -66,34 +59,24 @@ export default function App() {
           <>
             {activeScreen === 'home' ? (
               <main className="grid gap-5">
-                <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <section className="grid gap-4 md:grid-cols-2">
                   <FinanceCard
                     eyebrow="총수입"
-                    title="이번 달 기준"
+                    title="이번 달"
                     value={formatCurrency(summary.totalIncome)}
-                    subValue="월급, 성과금, 부수입을 합산한 월간 수입입니다."
+                    subValue="월급, 성과급, 기타수입을 합산한 금액입니다."
                     tone="accent"
                   />
                   <FinanceCard
                     eyebrow="총지출"
                     title="현재 사용"
                     value={formatCurrency(summary.totalSpent)}
-                    subValue={`수입 대비 ${formatPercent(summary.totalUsageRate)}`}
+                    subValue={`가이드라인 대비 ${formatPercent(
+                      summary.guidelineTotal > 0
+                        ? summary.totalSpent / summary.guidelineTotal
+                        : summary.totalUsageRate,
+                    )}`}
                     tone="mint"
-                  />
-                  <FinanceCard
-                    eyebrow="카드"
-                    title="현재 사용"
-                    value={formatCurrency(summary.cardSpent)}
-                    subValue={`수입 대비 ${formatPercent(summary.cardUsageRate)}`}
-                    tone="light"
-                  />
-                  <FinanceCard
-                    eyebrow="현금"
-                    title="현재 사용"
-                    value={formatCurrency(summary.cashSpent)}
-                    subValue="카드 외 직접 지출 흐름"
-                    tone="light"
                   />
                 </section>
 
@@ -103,8 +86,8 @@ export default function App() {
 
             {activeScreen === 'income' ? (
               <ScreenShell
-                title="수입 정리"
-                description="이번 달 기준 수입원을 먼저 정리합니다."
+                title="수입 관리"
+                description="이번 달 기준 수입원을 먼저 관리합니다."
                 onBack={() => setActiveScreen('home')}
               >
                 <SpendingForm
@@ -118,7 +101,7 @@ export default function App() {
 
             {activeScreen === 'spending' ? (
               <ScreenShell
-                title="지출 기록"
+                title="지출 관리"
                 description="카드와 현금 지출을 빠르게 추가합니다."
                 onBack={() => setActiveScreen('home')}
               >
@@ -133,7 +116,7 @@ export default function App() {
 
             {activeScreen === 'history' ? (
               <ScreenShell
-                title="소비 확인"
+                title="나의 소비 패턴"
                 description="최근 소비 기록과 현재 흐름을 점검합니다."
                 onBack={() => setActiveScreen('home')}
               >
@@ -143,8 +126,8 @@ export default function App() {
 
             {activeScreen === 'watchlist' ? (
               <ScreenShell
-                title="관심종목 보기"
-                description="등록한 종목의 시세와 관련 뉴스를 확인합니다."
+                title="관심종목 관리"
+                description="등록한 종목 코드, 시세, 관련 뉴스를 확인합니다."
                 onBack={() => setActiveScreen('home')}
               >
                 <WatchlistPanel
@@ -157,13 +140,13 @@ export default function App() {
 
             {activeScreen === 'settings' ? (
               <ScreenShell
-                title="설정 정리"
-                description="저장소, 데이터 관리, 소비 가이드라인을 한곳에서 관리합니다."
+                title="설정 관리"
+                description="데이터 관리와 소비관리를 한곳에서 관리합니다."
                 onBack={() => setActiveScreen('home')}
               >
                 <SettingsPanel
                   guidelines={data.monthlyGuidelines || {}}
-                  onResetDemoData={actions.resetDemoData}
+                  onResetDemoData={actions.resetSection}
                   onSetGuidelines={actions.setMonthlyGuidelines}
                   summary={summary}
                 />
@@ -172,7 +155,7 @@ export default function App() {
 
             {activeScreen === 'contact' ? (
               <ScreenShell
-                title="문의 남기기"
+                title="문의 관리"
                 description="운영팀에 의견이나 문제를 전달합니다."
                 onBack={() => setActiveScreen('home')}
               >
@@ -182,6 +165,16 @@ export default function App() {
                   contactEmail={contactEmail}
                 />
               </ScreenShell>
+            ) : null}
+
+            {activeScreen !== 'home' ? (
+              <button
+                className="fixed bottom-4 right-4 z-50 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-card"
+                onClick={() => setActiveScreen('home')}
+                type="button"
+              >
+                메인화면
+              </button>
             ) : null}
           </>
         )}

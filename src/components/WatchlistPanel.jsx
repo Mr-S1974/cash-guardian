@@ -98,7 +98,7 @@ export function WatchlistPanel({ watchlist, onAddWatchlist, onRemoveWatchlist })
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
             Market Watch
           </p>
-          <h2 className="mt-2 text-xl font-bold text-slate-950">관심종목과 관련 뉴스</h2>
+          <h2 className="mt-2 text-xl font-bold text-slate-950">관심종목 관리</h2>
         </div>
         <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
           외부 시세 연동
@@ -120,7 +120,9 @@ export function WatchlistPanel({ watchlist, onAddWatchlist, onRemoveWatchlist })
       </form>
 
       <div className="mt-3 text-sm text-slate-500">
-        {isLoading ? '관심종목 시세와 뉴스를 불러오는 중입니다.' : '등록한 종목별로 요약 시세와 뉴스를 표시합니다.'}
+        {isLoading
+          ? '관심종목 시세와 뉴스를 불러오는 중입니다.'
+          : '등록한 종목 코드, 시세, 관련 뉴스를 함께 표시합니다.'}
       </div>
 
       <div className="mt-5 grid gap-4">
@@ -137,7 +139,8 @@ export function WatchlistPanel({ watchlist, onAddWatchlist, onRemoveWatchlist })
                     {market?.shortName || item.label}
                   </p>
                   <p className="mt-1 text-sm font-medium text-slate-500">
-                    {(market?.symbol || item.query).toUpperCase()} · {market?.exchange || '정보 조회 중'}
+                    종목코드 {(market?.symbol || item.query).toUpperCase()} ·{' '}
+                    {market?.exchange || '정보 조회 중'}
                   </p>
                 </div>
                 <button
@@ -151,7 +154,7 @@ export function WatchlistPanel({ watchlist, onAddWatchlist, onRemoveWatchlist })
 
               {snapshot?.status === 'error' ? (
                 <p className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
-                  {snapshot.error}
+                  {snapshot.error} 외부 시세 제공처 응답이 막히면 관련 뉴스도 함께 비어 있을 수 있습니다.
                 </p>
               ) : snapshot?.status === 'ready' ? (
                 <>

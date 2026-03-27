@@ -17,13 +17,13 @@ export const defaultFinanceData = {
     },
     {
       id: 'income-bonus',
-      label: '보너스/성과금',
+      label: '성과급',
       amount: 250000,
       memo: '분기 인센티브 안분',
     },
     {
       id: 'income-side',
-      label: '부수입',
+      label: '기타수입',
       amount: 120000,
       memo: '소규모 외주/판매',
     },
@@ -146,13 +146,13 @@ function getDefaultIncomeSourcesFromLegacyPayload(payload) {
     },
     {
       id: 'income-bonus',
-      label: '보너스/성과금',
+      label: '성과급',
       amount: 0,
       memo: '',
     },
     {
       id: 'income-side',
-      label: '부수입',
+      label: '기타수입',
       amount: 0,
       memo: '',
     },

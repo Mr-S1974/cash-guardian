@@ -2,37 +2,37 @@ const ACTIONS = [
   {
     id: 'income',
     eyebrow: '1',
-    title: '수입 정리',
-    description: '이번 달 월급과 부수입부터 먼저 정리합니다.',
+    title: '수입 관리',
+    description: '이번 달 월급과 기타 수입부터 관리합니다.',
   },
   {
     id: 'spending',
     eyebrow: '2',
-    title: '지출 기록',
+    title: '지출 관리',
     description: '카드와 현금 지출을 빠르게 추가합니다.',
   },
   {
     id: 'history',
     eyebrow: '3',
-    title: '소비 확인',
+    title: '나의 소비 패턴',
     description: '최근 기록과 현재 소비 흐름을 점검합니다.',
   },
   {
     id: 'watchlist',
     eyebrow: '4',
-    title: '관심종목 보기',
-    description: '등록한 종목 시세와 뉴스를 확인합니다.',
+    title: '관심종목 관리',
+    description: '등록한 종목 코드, 시세, 관련 뉴스를 관리합니다.',
   },
   {
     id: 'settings',
     eyebrow: '5',
-    title: '설정 정리',
-    description: '저장소, 데이터 관리, 소비 가이드라인을 한곳에서 정리합니다.',
+    title: '설정 관리',
+    description: '데이터 관리와 소비관리를 한곳에서 정리합니다.',
   },
   {
     id: 'contact',
     eyebrow: '6',
-    title: '문의 남기기',
+    title: '문의 관리',
     description: '운영팀에 의견이나 문제를 바로 전달합니다.',
   },
 ];
@@ -45,9 +45,9 @@ export function HomeActionPanel({ onSelect }) {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
             Main Menu
           </p>
-          <h2 className="mt-2 text-xl font-bold text-slate-950">다음에 할 일을 선택하세요</h2>
+          <h2 className="mt-2 text-xl font-bold text-slate-950">관리할 화면을 선택하세요</h2>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            위에서 아래로 이어지는 순서대로 필요한 작업으로 바로 이동할 수 있습니다.
+            필요한 관리 화면으로 바로 전환할 수 있습니다.
           </p>
         </div>
       </div>

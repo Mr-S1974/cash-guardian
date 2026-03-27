@@ -14,6 +14,8 @@ const initialForm = {
   spentAt: '',
 };
 
+const COMMON_CATEGORIES = ['식비', '교통', '생활', '쇼핑', '구독', '의료', '교육', '기타'];
+
 export function SpendingForm({
   onAddTransaction,
   onSetIncomeSources,
@@ -60,9 +62,9 @@ export function SpendingForm({
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                 Monthly Income
               </p>
-              <h2 className="mt-2 text-xl font-bold text-slate-950">수입 항목 설정</h2>
+              <h2 className="mt-2 text-xl font-bold text-slate-950">수입 관리</h2>
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                이번 달 기준 수입원을 먼저 정리한 뒤 지출 판단 기준을 맞춥니다.
+                이번 달 기준 수입원을 먼저 관리한 뒤 지출 판단 기준을 맞춥니다.
               </p>
             </div>
           </div>
@@ -70,7 +72,14 @@ export function SpendingForm({
           <div className="mt-5 grid gap-4">
             {incomeForm.map((incomeSource, index) => (
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4" key={incomeSource.id}>
-                <p className="text-sm font-semibold text-slate-950">{incomeSource.label}</p>
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold text-slate-950">{incomeSource.label}</p>
+                  {incomeSource.id === 'income-salary' ? (
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-500">
+                      실수령액
+                    </span>
+                  ) : null}
+                </div>
                 <input
                   className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-lg font-semibold text-slate-950 outline-none transition focus:border-teal-500"
                   inputMode="numeric"
@@ -82,7 +91,11 @@ export function SpendingForm({
                       ),
                     )
                   }
-                  placeholder={`${incomeSource.label} 금액`}
+                  placeholder={
+                    incomeSource.id === 'income-salary'
+                      ? '월급 금액 (실수령액)'
+                      : `${incomeSource.label} 금액`
+                  }
                 />
                 <textarea
                   className="mt-3 min-h-20 w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500"
@@ -125,7 +138,7 @@ export function SpendingForm({
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
               Expense Entry
             </p>
-            <h2 className="mt-2 text-xl font-bold text-slate-950">지출 기록</h2>
+            <h2 className="mt-2 text-xl font-bold text-slate-950">지출 관리</h2>
             <p className="mt-2 text-sm leading-6 text-slate-500">
               초안 완성에 집중할 수 있도록 사용처, 금액, 카테고리, 메모만 간단히 남깁니다.
             </p>
@@ -175,6 +188,7 @@ export function SpendingForm({
               placeholder="금액"
             />
             <input
+              list="spending-category-options"
               className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
               value={form.category}
               onChange={(event) =>
@@ -182,6 +196,11 @@ export function SpendingForm({
               }
               placeholder="카테고리"
             />
+            <datalist id="spending-category-options">
+              {COMMON_CATEGORIES.map((category) => (
+                <option key={category} value={category} />
+              ))}
+            </datalist>
             <textarea
               className="min-h-24 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
               value={form.memo}
