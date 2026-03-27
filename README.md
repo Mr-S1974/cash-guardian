@@ -16,12 +16,13 @@ When monetary information is submitted, the graphs and charts on the right side 
 
 ## Contact Us Delivery
 
-The bottom `Contact Us` form always keeps a local backup in the browser.
+The bottom `Contact Us` flow is now server-backed. Inquiry data is not stored in the browser local database.
 
 - In production on Cloudflare Pages, the app sends feedback to the built-in Pages Function at `/api/contact`.
-- The function forwards the message to Telegram and the browser keeps a local backup either way.
-- `VITE_CONTACT_EMAIL` remains available as a fallback for local development or manual email draft flow.
-- If no endpoint or email fallback is set, feedback stays stored locally only.
+- The function stores each inquiry in Cloudflare KV and forwards it to Telegram.
+- Operators reply by replying to the bot's original Telegram message in the configured chat.
+- Telegram sends that reply to `/api/telegram-webhook`, and the app shows it under the original inquiry on the next poll.
+- `VITE_CONTACT_EMAIL` remains available as a fallback for local development, but that fallback does not support in-app threaded replies.
 - Start from `.env.example` and copy values into your local `.env`.
 
 ### Cloudflare Pages setup
@@ -30,12 +31,41 @@ Set these variables in Cloudflare Pages:
 
 - `TELEGRAM_BOT_TOKEN`
 - `TELEGRAM_CHAT_ID`
+- `TELEGRAM_WEBHOOK_SECRET`
+
+Add this Cloudflare KV binding:
+
+- `CONTACT_THREADS`
 
 Notes:
 
 - `TELEGRAM_BOT_TOKEN` is issued by `@BotFather`.
 - `TELEGRAM_CHAT_ID` is the private chat or group id that should receive alerts.
-- If you do not set these secrets, the app falls back to email draft or local-only storage.
+- Reply sync requires a Telegram webhook pointing to `/api/telegram-webhook`.
+- If you use a group chat, the bot must be able to receive operator replies in that chat.
+
+### Local verification helpers
+
+You can verify local configuration and register the Telegram webhook from this repo:
+
+```bash
+npm run contact:check
+npm run telegram:webhook:set
+```
+
+Expected local `.env` values for these scripts:
+
+- `CLOUDFLARE_PAGES_URL=https://your-site.pages.dev`
+- `TELEGRAM_BOT_TOKEN=...`
+- `TELEGRAM_WEBHOOK_SECRET=...`
+
+Production completion checklist:
+
+1. Create a Cloudflare KV namespace and bind it in Pages as `CONTACT_THREADS`.
+2. Set `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and `TELEGRAM_WEBHOOK_SECRET` in Pages.
+3. Set local `.env` `CLOUDFLARE_PAGES_URL` to the deployed Pages URL.
+4. Run `npm run telegram:webhook:set`.
+5. Send a test inquiry in the app, reply to the bot message in Telegram, and confirm the reply appears in the app within the next poll interval.
 
 ## *Credits*
 

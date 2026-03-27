@@ -125,9 +125,6 @@ export default function App() {
 
             <section className="mt-6">
               <FeedbackBoard
-                feedbacks={data.feedbacks || []}
-                onAddFeedback={actions.addFeedback}
-                onRemoveFeedback={actions.removeFeedback}
                 contactEndpoint={contactEndpoint}
                 deliveryMethod={feedbackDeliveryMethod}
                 contactEmail={contactEmail}

@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --open /index.src.html",
     "build": "vite build && node scripts/sync-static-deploy.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "contact:check": "node scripts/check-contact-config.mjs",
+    "telegram:webhook:set": "node scripts/register-telegram-webhook.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

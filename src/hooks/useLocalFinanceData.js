@@ -112,34 +112,6 @@ export function useLocalFinanceData() {
     });
   };
 
-  const addFeedback = async (feedback) => {
-    const nextFeedback = {
-      id: crypto.randomUUID(),
-      text: feedback.text?.trim() || '',
-      deliveryStatus: feedback.deliveryStatus || 'local_only',
-      deliveredAt: feedback.deliveredAt || null,
-      createdAt: new Date().toISOString(),
-    };
-
-    if (!nextFeedback.text) {
-      return;
-    }
-
-    await persist({
-      ...dataRef.current,
-      feedbacks: [nextFeedback, ...(dataRef.current.feedbacks || [])],
-    });
-  };
-
-  const removeFeedback = async (feedbackId) => {
-    await persist({
-      ...dataRef.current,
-      feedbacks: (dataRef.current.feedbacks || []).filter(
-        (feedback) => feedback.id !== feedbackId,
-      ),
-    });
-  };
-
   const addWatchlist = async (query) => {
     const normalizedQuery = query.trim();
 
@@ -227,8 +199,6 @@ export function useLocalFinanceData() {
       addTransaction,
       removeTransaction,
       resetDemoData,
-      addFeedback,
-      removeFeedback,
       addWatchlist,
       removeWatchlist,
     },

@@ -88,15 +88,6 @@ export const defaultFinanceData = {
       label: '현금',
     },
   },
-  feedbacks: [
-    {
-      id: 'seed-feedback-1',
-      text: '영수증 촬영 후 금액 자동 인식 기능이 다음 단계에서 필요합니다.',
-      deliveryStatus: 'local_only',
-      deliveredAt: null,
-      createdAt: new Date().toISOString(),
-    },
-  ],
   watchlist: [
     {
       id: 'seed-watch-aapl',
@@ -171,6 +162,11 @@ export async function getFinanceSnapshot() {
   const snapshot = await withStore('readonly', (store) => store.get(PRIMARY_KEY));
 
   if (snapshot?.payload) {
+    const {
+      feedbacks: _feedbacks,
+      comments: _comments,
+      ...payloadWithoutFeedbacks
+    } = snapshot.payload;
     const transactions = (snapshot.payload.transactions || defaultFinanceData.transactions).map(
       (transaction) => ({
         memo: '',
@@ -179,29 +175,24 @@ export async function getFinanceSnapshot() {
         ...transaction,
       }),
     );
-    const feedbacks =
-      snapshot.payload.feedbacks ||
-      snapshot.payload.comments?.map((comment) => ({
-        id: comment.id,
-        text: comment.text || '',
-        deliveryStatus: comment.deliveryStatus || 'local_only',
-        deliveredAt: comment.deliveredAt || null,
-        createdAt: comment.createdAt || new Date().toISOString(),
-      })) ||
-      defaultFinanceData.feedbacks;
-
-    return {
+    const nextSnapshot = {
       ...defaultFinanceData,
-      ...snapshot.payload,
+      ...payloadWithoutFeedbacks,
       transactions,
-      incomeSources: snapshot.payload.incomeSources || getDefaultIncomeSourcesFromLegacyPayload(snapshot.payload),
+      incomeSources:
+        snapshot.payload.incomeSources || getDefaultIncomeSourcesFromLegacyPayload(snapshot.payload),
       monthlyGuidelines: {
         ...defaultFinanceData.monthlyGuidelines,
         ...(snapshot.payload.monthlyGuidelines || {}),
       },
-      feedbacks,
       watchlist: snapshot.payload.watchlist || defaultFinanceData.watchlist,
     };
+
+    if (snapshot.payload.feedbacks || snapshot.payload.comments) {
+      await saveFinanceSnapshot(nextSnapshot);
+    }
+
+    return nextSnapshot;
   }
 
   await saveFinanceSnapshot(defaultFinanceData);
@@ -209,11 +200,17 @@ export async function getFinanceSnapshot() {
 }
 
 export function saveFinanceSnapshot(payload) {
+  const {
+    feedbacks: _feedbacks,
+    comments: _comments,
+    ...payloadWithoutFeedbacks
+  } = payload;
+
   return withStore('readwrite', (store) =>
     store.put({
       id: PRIMARY_KEY,
       payload: {
-        ...payload,
+        ...payloadWithoutFeedbacks,
         updatedAt: new Date().toISOString(),
       },
     }),
