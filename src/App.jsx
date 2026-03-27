@@ -45,6 +45,9 @@ export default function App() {
               <p className="mt-4 max-w-xl text-lg font-bold tracking-[-0.04em] text-slate-950 lg:text-[1.65rem]">
                 멱살 잡고 지켜내는 팩폭 코치
               </p>
+              <p className="mt-3 max-w-lg text-sm leading-7 text-slate-700 lg:text-base">
+                어디서 새는지 바로 보고, 지금 관리할 것만 골라서 바로 들어가세요.
+              </p>
             </div>
             <div className="mt-5 rounded-[28px] border border-white/70 bg-white/70 p-5 backdrop-blur lg:mt-0">
               <p className="text-sm font-black uppercase tracking-[0.22em] text-rose-500">
@@ -80,14 +83,14 @@ export default function App() {
                 <section className="grid gap-4 md:grid-cols-2">
                   <FinanceCard
                     eyebrow="수입"
-                    title="이번 달"
+                    title="들어온 돈"
                     value={formatCurrency(summary.totalIncome)}
                     subValue="이번 달 들어온 돈을 한 번에 보여줍니다."
                     tone="accent"
                   />
                   <FinanceCard
                     eyebrow="지출"
-                    title="현재 사용"
+                    title="나간 돈"
                     value={formatCurrency(summary.totalSpent)}
                     subValue={`쓸 돈 기준 대비 ${formatPercent(
                       summary.guidelineTotal > 0
