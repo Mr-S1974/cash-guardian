@@ -31,13 +31,11 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
   const [submitMessage, setSubmitMessage] = useState('');
   const [threads, setThreads] = useState([]);
   const [loadState, setLoadState] = useState(contactEndpoint ? 'loading' : 'idle');
-  const [loadMessage, setLoadMessage] = useState('');
 
   useEffect(() => {
     if (!contactEndpoint || deliveryMethod !== 'endpoint') {
       setThreads([]);
       setLoadState('idle');
-      setLoadMessage('');
       return undefined;
     }
 
@@ -46,7 +44,6 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
     const loadThreads = async (isInitial = false) => {
       if (isInitial) {
         setLoadState('loading');
-        setLoadMessage('');
       }
 
       try {
@@ -68,16 +65,12 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
 
         setThreads(Array.isArray(result.threads) ? result.threads : []);
         setLoadState('ready');
-        setLoadMessage('');
       } catch (error) {
         if (!active) {
           return;
         }
 
         setLoadState('error');
-        setLoadMessage(
-          '문의 서버가 아직 배포되지 않았거나 설정이 완전하지 않습니다. 최신 Pages 배포와 /api/contact 함수 연결 상태를 확인하세요.',
-        );
       }
     };
 
@@ -137,9 +130,7 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
         event.currentTarget.reset();
       } catch (error) {
         setSubmitState('error');
-        setSubmitMessage(
-          '문의 서버가 아직 배포되지 않았거나 연결되지 않았습니다. Contact Us 내용은 로컬에 저장되지 않습니다.',
-        );
+        setSubmitMessage('문의 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.');
       }
 
       return;
@@ -158,25 +149,13 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
     setSubmitMessage('Contact Us 서버 경로가 설정되지 않았습니다. 문의 내용은 로컬에 저장되지 않습니다.');
   };
 
-  const statusLabel =
-    deliveryMethod === 'endpoint' && contactEndpoint
-      ? 'Telegram 양방향 연결'
-      : deliveryMethod === 'email' && contactEmail
-        ? `이메일 초안 연결: ${contactEmail}`
-        : '서버 연결 필요';
-
   return (
     <section className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-card lg:p-6">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-            Contact Us
-          </p>
-          <h2 className="mt-2 text-xl font-bold text-slate-950">운영팀에 의견 보내기</h2>
-        </div>
-        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
-          {statusLabel}
-        </span>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+          Contact Us
+        </p>
+        <h2 className="mt-2 text-xl font-bold text-slate-950">운영팀에 의견 보내기</h2>
       </div>
 
       <form className="mt-5 grid gap-3" onSubmit={handleSubmit}>
@@ -207,7 +186,6 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
         {loadState === 'loading' ? (
           <p className="text-sm text-slate-400">문의 내역을 불러오는 중입니다.</p>
         ) : null}
-        {loadMessage ? <p className="text-sm text-red-600">{loadMessage}</p> : null}
         {loadState === 'ready' && threads.length === 0 ? (
           <p className="text-sm text-slate-400">아직 등록된 문의가 없습니다.</p>
         ) : null}
