@@ -10,6 +10,10 @@ function json(body, init = {}) {
   });
 }
 
+export async function onRequestGet() {
+  return json({ ok: true, status: 'telegram_webhook_ready' });
+}
+
 function formatTelegramSender(from) {
   if (!from) {
     return 'Telegram operator';
