@@ -8,7 +8,12 @@
     "build": "vite build && node scripts/sync-static-deploy.mjs",
     "preview": "vite preview",
     "contact:check": "node scripts/check-contact-config.mjs",
-    "telegram:webhook:set": "node scripts/register-telegram-webhook.mjs"
+    "telegram:webhook:set": "node scripts/register-telegram-webhook.mjs",
+    "cf:pages:config:download": "npx wrangler pages download config cash-guardian",
+    "cf:pages:dev": "node scripts/ensure-wrangler-config.mjs && npx wrangler pages dev",
+    "cf:pages:deploy": "node scripts/ensure-wrangler-config.mjs && npm run build && npx wrangler pages deploy",
+    "cf:pages:deploy:production": "node scripts/ensure-wrangler-config.mjs && npm run build && npx wrangler pages deploy --branch main",
+    "cf:pages:deploy:preview": "node scripts/ensure-wrangler-config.mjs && npm run build && npx wrangler pages deploy --branch preview"
   },
   "dependencies": {
     "react": "^18.3.1",

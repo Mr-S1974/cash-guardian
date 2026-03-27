@@ -67,6 +67,37 @@ Production completion checklist:
 4. Run `npm run telegram:webhook:set`.
 5. Send a test inquiry in the app, reply to the bot message in Telegram, and confirm the reply appears in the app within the next poll interval.
 
+### Direct Cloudflare deploy control
+
+This repo can be switched from dashboard-only deploys to local Wrangler-driven deploys.
+
+One-time bootstrap:
+
+```bash
+npm run cf:pages:config:download
+```
+
+That command downloads the current Pages project configuration into a local Wrangler config. Cloudflare recommends pulling the existing dashboard config first instead of hand-writing it, because once used for Pages deploys the Wrangler file becomes the source of truth.
+
+After that, use:
+
+```bash
+npm run cf:pages:deploy:production
+```
+
+Optional commands:
+
+```bash
+npm run cf:pages:deploy:preview
+npm run cf:pages:dev
+```
+
+Notes:
+
+- `functions/` must stay at the repo root for Pages Functions routing.
+- The downloaded Wrangler config should be reviewed before the first deploy.
+- You need Cloudflare auth available locally through Wrangler login or API token setup.
+
 ## *Credits*
 
 Stephenie St.Hilaire - https://github.com/iamthesaint
