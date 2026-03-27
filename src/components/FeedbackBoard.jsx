@@ -11,11 +11,11 @@ function formatFeedbackDate(isoDate) {
 
 function formatDeliveryStatus(status) {
   if (status === 'delivered') {
-    return 'Telegram 전달 완료';
+    return '전달 완료';
   }
 
   if (status === 'failed') {
-    return '서버 저장 완료, Telegram 전달 실패';
+    return '전달 실패';
   }
 
   return '서버 처리 중';
@@ -65,6 +65,10 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
 
         setThreads(Array.isArray(result.threads) ? result.threads : []);
         setLoadState('ready');
+        setSubmitState((current) => (current === 'error' ? 'idle' : current));
+        setSubmitMessage((current) =>
+          current === '문의 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.' ? '' : current,
+        );
       } catch (error) {
         if (!active) {
           return;
@@ -198,9 +202,6 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
               <div>
                 <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
                   {formatFeedbackDate(feedback.createdAt)}
-                </p>
-                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                  Ticket {feedback.id}
                 </p>
               </div>
             </div>
