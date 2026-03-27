@@ -38,7 +38,7 @@ export function SettingsPanel({ onResetDemoData }) {
         <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <p className="text-sm font-semibold text-slate-950">로컬 저장소 사용 중</p>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            수입, 지출, 메모, 영수증, 관심종목은 이 기기 브라우저 저장소에만 보관됩니다. 문의는
+            수입, 지출, 메모, 관심종목은 이 기기 브라우저 저장소에만 보관됩니다. 문의는
             맨 아래 Contact Us에서 별도로 처리됩니다.
           </p>
         </div>

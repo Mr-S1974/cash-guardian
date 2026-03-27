@@ -52,19 +52,6 @@ export function TransactionList({ transactions }) {
             {transaction.memo ? (
               <p className="mt-3 text-sm leading-6 text-slate-600">{transaction.memo}</p>
             ) : null}
-            {transaction.receiptImage ? (
-              <div className="mt-3 flex items-center gap-3">
-                <img
-                  alt={`${transaction.merchant} 영수증`}
-                  className="h-16 w-16 rounded-2xl object-cover"
-                  src={transaction.receiptImage}
-                />
-                <div className="text-sm text-slate-500">
-                  <p className="font-semibold text-slate-700">영수증 첨부됨</p>
-                  <p>{transaction.receiptName || 'receipt-image'}</p>
-                </div>
-              </div>
-            ) : null}
           </article>
         ))}
       </div>

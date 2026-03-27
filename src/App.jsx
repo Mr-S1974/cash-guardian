@@ -1,5 +1,6 @@
 import { FeedbackBoard } from './components/FeedbackBoard';
 import { FinanceCard } from './components/FinanceCard';
+import { HomeActionPanel } from './components/HomeActionPanel';
 import { MonthlyGuidelinePanel } from './components/MonthlyGuidelinePanel';
 import { SettingsPanel } from './components/SettingsPanel';
 import { SpendingForm } from './components/SpendingForm';
@@ -75,14 +76,30 @@ export default function App() {
                 />
               </section>
 
-              <section className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-                <SpendingForm
-                  incomeSources={data.incomeSources || []}
-                  onAddTransaction={actions.addTransaction}
-                  onSetIncomeSources={actions.setIncomeSources}
-                />
-                <div className="grid gap-5">
+              <HomeActionPanel />
+
+              <SpendingForm
+                expenseSectionId="income-section"
+                incomeSectionId="income-section"
+                incomeSources={data.incomeSources || []}
+                onAddTransaction={actions.addTransaction}
+                onSetIncomeSources={actions.setIncomeSources}
+                showExpenseSection={false}
+              />
+
+              <SpendingForm
+                expenseSectionId="spending-section"
+                incomeSources={data.incomeSources || []}
+                onAddTransaction={actions.addTransaction}
+                onSetIncomeSources={actions.setIncomeSources}
+                showIncomeSection={false}
+              />
+
+              <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+                <div id="history-section">
                   <TransactionList transactions={data.transactions.slice(0, 6)} />
+                </div>
+                <div id="guide-section">
                   <MonthlyGuidelinePanel
                     guidelines={data.monthlyGuidelines || {}}
                     onSetGuidelines={actions.setMonthlyGuidelines}
@@ -91,16 +108,20 @@ export default function App() {
                 </div>
               </section>
 
-              <WatchlistPanel
-                watchlist={data.watchlist || []}
-                onAddWatchlist={actions.addWatchlist}
-                onRemoveWatchlist={actions.removeWatchlist}
-              />
+              <section id="watchlist-section">
+                <WatchlistPanel
+                  watchlist={data.watchlist || []}
+                  onAddWatchlist={actions.addWatchlist}
+                  onRemoveWatchlist={actions.removeWatchlist}
+                />
+              </section>
 
-              <SettingsPanel onResetDemoData={actions.resetDemoData} />
+              <section id="settings-section">
+                <SettingsPanel onResetDemoData={actions.resetDemoData} />
+              </section>
             </main>
 
-            <section className="mt-6">
+            <section className="mt-6" id="contact-section">
               <FeedbackBoard
                 contactEndpoint={contactEndpoint}
                 deliveryMethod={feedbackDeliveryMethod}
