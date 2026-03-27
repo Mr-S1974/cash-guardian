@@ -14,7 +14,7 @@ const initialForm = {
   spentAt: '',
 };
 
-const COMMON_CATEGORIES = ['식비', '교통', '생활', '쇼핑', '구독', '의료', '교육', '기타'];
+const COMMON_CATEGORIES = ['식비', '교통', '생활', '쇼핑', '구독', '의료', '교육', '취미'];
 
 export function SpendingForm({
   onAddTransaction,
@@ -140,7 +140,7 @@ export function SpendingForm({
             </p>
             <h2 className="mt-2 text-xl font-bold text-slate-950">지출 관리</h2>
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              초안 완성에 집중할 수 있도록 사용처, 금액, 카테고리, 메모만 간단히 남깁니다.
+              생활비, 군것질, 쇼핑처럼 오늘 쓴 돈을 빠르게 기록합니다.
             </p>
           </div>
 
@@ -155,7 +155,7 @@ export function SpendingForm({
                 type="button"
                 onClick={() => setForm((current) => ({ ...current, type: 'card' }))}
               >
-                카드
+                카드·간편결제
               </button>
               <button
                 className={`rounded-2xl px-4 py-3 text-sm font-semibold ${
@@ -176,7 +176,7 @@ export function SpendingForm({
               onChange={(event) =>
                 setForm((current) => ({ ...current, merchant: event.target.value }))
               }
-              placeholder="사용처"
+              placeholder="어디에 썼나요?"
             />
             <input
               className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
@@ -185,7 +185,7 @@ export function SpendingForm({
               onChange={(event) =>
                 setForm((current) => ({ ...current, amount: event.target.value }))
               }
-              placeholder="금액"
+              placeholder="얼마를 썼나요?"
             />
             <input
               list="spending-category-options"
@@ -194,7 +194,7 @@ export function SpendingForm({
               onChange={(event) =>
                 setForm((current) => ({ ...current, category: event.target.value }))
               }
-              placeholder="카테고리"
+              placeholder="어떤 지출인가요?"
             />
             <datalist id="spending-category-options">
               {COMMON_CATEGORIES.map((category) => (
@@ -207,7 +207,7 @@ export function SpendingForm({
               onChange={(event) =>
                 setForm((current) => ({ ...current, memo: event.target.value }))
               }
-              placeholder="지출 메모"
+              placeholder="메모가 있으면 남겨주세요"
             />
           </div>
 

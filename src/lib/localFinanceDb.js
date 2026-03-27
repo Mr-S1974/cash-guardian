@@ -32,7 +32,7 @@ export const defaultFinanceData = {
     total: 1800000,
     card: 1200000,
     cash: 200000,
-    memo: '합계는 총 수입의 절반 안쪽, 현금은 군것질/즉시 결제만 사용',
+    memo: '전체 사용은 수입의 절반 안쪽, 현금은 군것질이나 바로 내는 결제만 사용',
   },
   monthlyBudgetMonth: new Date().toISOString().slice(0, 7),
   transactions: [

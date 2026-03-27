@@ -61,7 +61,7 @@ export function SettingsPanel({
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Settings</p>
         <h2 className="mt-2 text-xl font-bold text-slate-950">설정 관리</h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">
-          데이터 관리와 소비관리, 문의관리를 이곳에서 한 번에 정리합니다.
+          데이터 관리와 쓸 돈 기준, 문의관리를 이곳에서 한 번에 관리합니다.
         </p>
       </div>
 
@@ -82,7 +82,7 @@ export function SettingsPanel({
           onClick={() => setTab('guide')}
           type="button"
         >
-          소비관리
+          쓸 돈 기준
         </button>
         <button
           className={`rounded-2xl px-4 py-3 text-sm font-semibold transition ${
@@ -100,7 +100,7 @@ export function SettingsPanel({
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-sm font-semibold text-slate-950">초기화 범위를 선택하세요</p>
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              수입, 지출, 관심종목, 소비 가이드라인을 항목별로 초기화하거나 전체를 한 번에 초기화할 수
+              수입, 지출, 관심종목, 쓸 돈 기준을 항목별로 초기화하거나 전체를 한 번에 초기화할 수
               있습니다.
             </p>
           </div>
@@ -131,7 +131,7 @@ export function SettingsPanel({
               onClick={() => onResetDemoData('guidelines')}
               type="button"
             >
-              소비관리만 초기화
+              쓸 돈 기준만 초기화
             </button>
           </div>
           <button
@@ -147,9 +147,10 @@ export function SettingsPanel({
       {tab === 'guide' ? (
         <div className="mt-4 grid gap-4">
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <p className="text-sm font-semibold text-slate-950">이번 달 소비 가이드라인</p>
+            <p className="text-sm font-semibold text-slate-950">이번 달 쓸 돈 기준</p>
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              총 수입 {formatCurrency(summary.totalIncome)} 기준으로 카드와 현금 기준을 정리합니다.
+              이번 달 수입 {formatCurrency(summary.totalIncome)} 기준으로 전체, 카드·간편결제,
+              현금 사용 기준을 정리합니다.
             </p>
           </div>
           <form className="grid gap-3" onSubmit={handleGuidelineSubmit}>
@@ -159,39 +160,39 @@ export function SettingsPanel({
                 value={formatNumericInput(form.total || '')}
                 inputMode="numeric"
                 onChange={(event) => setForm((current) => ({ ...current, total: event.target.value }))}
-                placeholder="합계 가이드라인"
+                placeholder="전체 사용 기준"
               />
               <input
                 className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-semibold text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
                 value={formatNumericInput(form.card || '')}
                 inputMode="numeric"
                 onChange={(event) => setForm((current) => ({ ...current, card: event.target.value }))}
-                placeholder="카드 가이드라인"
+                placeholder="카드·간편결제 기준"
               />
               <input
                 className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-semibold text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
                 value={formatNumericInput(form.cash || '')}
                 inputMode="numeric"
                 onChange={(event) => setForm((current) => ({ ...current, cash: event.target.value }))}
-                placeholder="현금 가이드라인"
+                placeholder="현금 기준"
               />
             </div>
             <textarea
               className="min-h-24 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
               value={form.memo || ''}
               onChange={(event) => setForm((current) => ({ ...current, memo: event.target.value }))}
-              placeholder="이번 달 소비 원칙 메모"
+              placeholder="이번 달 돈 쓰는 원칙 메모"
             />
             <button
               className="rounded-2xl bg-slate-950 px-4 py-4 text-base font-semibold text-white"
               type="submit"
             >
-              가이드라인 저장
+              기준 저장
             </button>
           </form>
           <div className="grid gap-3 md:grid-cols-3">
             <ProgressRow label="합계" limit={summary.guidelineTotal} spent={summary.totalSpent} tone="teal" />
-            <ProgressRow label="카드" limit={summary.guidelineCard} spent={summary.cardSpent} tone="rose" />
+            <ProgressRow label="카드·간편결제" limit={summary.guidelineCard} spent={summary.cardSpent} tone="rose" />
             <ProgressRow label="현금" limit={summary.guidelineCash} spent={summary.cashSpent} tone="amber" />
           </div>
         </div>

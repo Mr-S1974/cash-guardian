@@ -59,7 +59,7 @@ export default function App() {
                   수입 점검
                 </span>
                 <span className="rounded-full bg-teal-700 px-3 py-1 text-xs font-semibold text-white">
-                  지출 제어
+                  쓴 돈 점검
                 </span>
                 <span className="rounded-full bg-rose-500 px-3 py-1 text-xs font-semibold text-white">
                   관심종목 체크
@@ -119,7 +119,7 @@ export default function App() {
             {activeScreen === 'spending' ? (
               <ScreenShell
                 title="지출"
-                description="지출관리와 나의 소비 패턴 중 필요한 화면을 선택하세요."
+                description="지출 기록을 남기거나, 내가 어디에 돈을 쓰는지 바로 확인하세요."
               >
                 <section className="grid gap-3 md:grid-cols-2">
                   <button
@@ -134,7 +134,7 @@ export default function App() {
                       지출관리
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-500">
-                      카드와 현금 지출을 기록합니다.
+                      카드, 간편결제, 현금으로 쓴 돈을 기록합니다.
                     </p>
                   </button>
                   <button
@@ -149,7 +149,7 @@ export default function App() {
                       나의 소비 패턴
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-500">
-                      최근 소비 흐름과 메모를 확인합니다.
+                      최근에 어디에 돈을 썼는지 흐름을 확인합니다.
                     </p>
                   </button>
                 </section>
@@ -157,7 +157,10 @@ export default function App() {
             ) : null}
 
             {activeScreen === 'spending-manage' ? (
-              <ScreenShell title="지출 관리" description="카드와 현금 지출을 빠르게 추가합니다.">
+              <ScreenShell
+                title="지출 관리"
+                description="생활비, 식비, 쇼핑처럼 오늘 쓴 돈을 빠르게 추가합니다."
+              >
                 <SpendingForm
                   incomeSources={data.incomeSources || []}
                   onAddTransaction={actions.addTransaction}
@@ -168,7 +171,10 @@ export default function App() {
             ) : null}
 
             {activeScreen === 'history' ? (
-              <ScreenShell title="나의 소비 패턴" description="최근 소비 기록과 현재 흐름을 점검합니다.">
+              <ScreenShell
+                title="나의 소비 패턴"
+                description="최근에 어디에 돈을 썼는지 흐름을 점검합니다."
+              >
                 <TransactionList transactions={data.transactions.slice(0, 12)} />
               </ScreenShell>
             ) : null}
@@ -189,7 +195,7 @@ export default function App() {
             {activeScreen === 'settings' ? (
               <ScreenShell
                 title="설정 관리"
-                description="데이터 관리와 소비관리, 문의관리를 한곳에서 관리합니다."
+                description="데이터 관리와 쓸 돈 기준, 문의관리를 한곳에서 관리합니다."
               >
                 <SettingsPanel
                   contactEmail={contactEmail}

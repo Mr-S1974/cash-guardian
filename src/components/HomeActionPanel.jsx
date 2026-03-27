@@ -9,7 +9,7 @@ const ACTIONS = [
     id: 'spending',
     eyebrow: 'Spend',
     title: '지출',
-    description: '지출관리와 나의 소비 패턴으로 이동합니다.',
+    description: '오늘 쓴 돈을 기록하거나 소비 흐름을 확인합니다.',
   },
   {
     id: 'watchlist',
@@ -21,7 +21,7 @@ const ACTIONS = [
     id: 'settings',
     eyebrow: 'Setup',
     title: '설정관리',
-    description: '데이터 관리, 소비관리, 문의를 모아둡니다.',
+    description: '데이터 관리, 쓸 돈 기준, 문의를 모아둡니다.',
   },
 ];
 

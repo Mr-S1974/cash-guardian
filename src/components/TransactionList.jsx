@@ -2,7 +2,7 @@ import { formatCurrency } from '../lib/format';
 
 function getTypeLabel(type) {
   if (type === 'card') {
-    return '카드';
+    return '카드·간편결제';
   }
 
   return '현금';
@@ -18,7 +18,7 @@ export function TransactionList({ transactions }) {
           </p>
           <h2 className="mt-2 text-xl font-bold text-slate-950">나의 소비 패턴</h2>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            최근에 기록한 지출 흐름과 메모를 한눈에 확인합니다.
+            최근에 어디에 돈을 썼는지 흐름과 메모를 한눈에 확인합니다.
           </p>
         </div>
       </div>
