@@ -27,7 +27,6 @@ function isJsonResponse(response) {
 
 export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', contactEmail = '' }) {
   const [draftText, setDraftText] = useState('');
-  const [draftReplyTo, setDraftReplyTo] = useState('');
   const [submitState, setSubmitState] = useState('idle');
   const [submitMessage, setSubmitMessage] = useState('');
   const [threads, setThreads] = useState([]);
@@ -96,9 +95,8 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
 
     const formData = new FormData(event.currentTarget);
     const text = String(formData.get('text') || '').trim();
-    const replyTo = String(formData.get('replyTo') || '').trim();
 
-    if (!text || !replyTo) {
+    if (!text) {
       return;
     }
 
@@ -115,7 +113,6 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
           },
           body: JSON.stringify({
             message: text,
-            replyTo,
           }),
         });
 
@@ -132,12 +129,11 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
         setSubmitState(response.ok && result.ok ? 'success' : 'error');
         setSubmitMessage(
           response.ok && result.ok
-            ? '문의가 Telegram으로 전달되었습니다. 운영팀이 Telegram에서 이 문의 메시지에 답장하면 아래 Replies에 자동 표시됩니다.'
+            ? '문의가 저장되고 Telegram으로 전달되었습니다.'
             : '문의는 서버에 저장되었지만 Telegram 전달에 실패했습니다. 설정을 확인해 주세요.',
         );
 
         setDraftText('');
-        setDraftReplyTo('');
         event.currentTarget.reset();
       } catch (error) {
         setSubmitState('error');
@@ -152,7 +148,7 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
     if (deliveryMethod === 'email' && contactEmail) {
       window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(
         '[Cash Guardian] Contact Us',
-      )}&body=${encodeURIComponent(`Reply to: ${replyTo}\n\n${text}`)}`;
+      )}&body=${encodeURIComponent(text)}`;
       setSubmitState('success');
       setSubmitMessage('이메일 초안을 열었습니다. 이 경로에서는 앱 내 자동 회신 동기화가 지원되지 않습니다.');
       return;
@@ -177,10 +173,6 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
             Contact Us
           </p>
           <h2 className="mt-2 text-xl font-bold text-slate-950">운영팀에 의견 보내기</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-500">
-            문의는 서버에만 저장되고 Telegram으로 전달됩니다. 운영팀이 Telegram에서 같은 문의
-            메시지에 답장하면 아래 Replies에 자동으로 표시됩니다.
-          </p>
         </div>
         <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
           {statusLabel}
@@ -188,13 +180,6 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
       </div>
 
       <form className="mt-5 grid gap-3" onSubmit={handleSubmit}>
-        <input
-          className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
-          name="replyTo"
-          placeholder="답변 받을 연락처를 입력하세요. 예: email@example.com 또는 @telegram_id"
-          value={draftReplyTo}
-          onChange={(event) => setDraftReplyTo(event.target.value)}
-        />
         <textarea
           className="min-h-24 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-base font-medium text-slate-950 outline-none transition focus:border-teal-500 focus:bg-white"
           name="text"
@@ -235,9 +220,6 @@ export function FeedbackBoard({ contactEndpoint = '', deliveryMethod = 'local', 
               <div>
                 <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
                   {formatFeedbackDate(feedback.createdAt)}
-                </p>
-                <p className="mt-2 text-sm font-medium text-slate-500">
-                  답변 연락처: {feedback.replyTo}
                 </p>
                 <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
                   Ticket {feedback.id}

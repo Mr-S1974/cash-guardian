@@ -21,8 +21,6 @@ function formatTelegramMessage(thread) {
     `Ticket: ${thread.id}`,
     '',
     `Submitted at: ${thread.createdAt}`,
-    `Reply to: ${thread.replyTo}`,
-    '',
     'Message:',
     thread.text,
     '',
@@ -57,22 +55,13 @@ export async function onRequestPost(context) {
   }
 
   const message = typeof payload?.message === 'string' ? payload.message.trim() : '';
-  const replyTo = typeof payload?.replyTo === 'string' ? payload.replyTo.trim() : '';
 
   if (!message) {
     return json({ error: 'message_required' }, { status: 400 });
   }
 
-  if (!replyTo) {
-    return json({ error: 'reply_to_required' }, { status: 400 });
-  }
-
   if (message.length > 5000) {
     return json({ error: 'message_too_long' }, { status: 400 });
-  }
-
-  if (replyTo.length > 500) {
-    return json({ error: 'reply_to_too_long' }, { status: 400 });
   }
 
   if (!isConfigured(env)) {
@@ -83,7 +72,6 @@ export async function onRequestPost(context) {
   const thread = {
     id: crypto.randomUUID(),
     text: message,
-    replyTo,
     createdAt: submittedAt,
     updatedAt: submittedAt,
     deliveryStatus: 'pending',
